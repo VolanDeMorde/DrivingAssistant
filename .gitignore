@@ -1,0 +1,13 @@
+# PDFs
+*.pdf
+
+# Development scripts
+*.py
+
+# Temp/scratch files
+*_list.txt
+*_slugs.txt
+
+# OS files
+.DS_Store
+Thumbs.db
