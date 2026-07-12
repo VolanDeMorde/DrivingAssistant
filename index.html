@@ -936,7 +936,8 @@
 
 
         // ==================== QUIZ LOGIC ====================
-        const quizQuestions = [
+        const allQuizQuestions = [
+            // --- DRIVING SIDE & BASICS ---
             {
                 q: "Which side of the road must you drive on in Cyprus?",
                 options: ["Right side", "Left side", "Center on rural roads", "It varies by district"],
@@ -944,17 +945,37 @@
                 exp: "Cyprus drives on the left-hand side of the road, a legacy of British administration."
             },
             {
+                q: "When overtaking another vehicle in Cyprus, you pass on which side?",
+                options: ["The left", "The right", "Either side is fine", "Only on motorways"],
+                ans: 1,
+                exp: "Because Cyprus drives on the left, overtaking is done on the right-hand side of the vehicle in front."
+            },
+            {
+                q: "At a junction with no signs, which direction must you look first when emerging?",
+                options: ["Left", "Right", "Straight ahead", "Either direction equally"],
+                ans: 1,
+                exp: "In a left-hand traffic country like Cyprus, traffic from the right is closer to you, so you look right first."
+            },
+            // --- ROUNDABOUTS ---
+            {
                 q: "At a roundabout, who has priority?",
                 options: ["Traffic approaching from the left", "The vehicle that arrives first", "Traffic approaching from the right", "Larger vehicles"],
                 ans: 2,
                 exp: "Since you approach clockwise (driving on the left), you must give way to traffic approaching from your right that is already on the roundabout."
             },
             {
-                q: "Is it legal to drink water from a bottle while driving?",
-                options: ["Yes, staying hydrated is essential", "Only at traffic lights", "No, eating and drinking while driving is illegal", "Only if it has a sports cap"],
-                ans: 2,
-                exp: "Cyprus has very strict laws against distractions. Eating or drinking anything (even water) while driving is an offense."
+                q: "When exiting a roundabout, which signal should you give?",
+                options: ["Right signal", "Left signal", "No signal is needed", "Hazard lights"],
+                ans: 1,
+                exp: "Indicate left when you are about to exit a roundabout to warn other drivers."
             },
+            {
+                q: "On a two-lane roundabout, which lane should you use to turn right?",
+                options: ["The outer lane", "The inner (right-hand) lane", "Either lane", "Only one lane exists on all roundabouts"],
+                ans: 1,
+                exp: "For a right turn or full loop, use the inner lane of a multi-lane roundabout and signal left when exiting."
+            },
+            // --- SPEED LIMITS ---
             {
                 q: "What is the standard speed limit in built-up (urban) areas?",
                 options: ["30 km/h", "50 km/h", "65 km/h", "80 km/h"],
@@ -962,16 +983,10 @@
                 exp: "Unless signs indicate otherwise, the limit in towns and residential areas is 50 km/h."
             },
             {
-                q: "What do double yellow lines at the edge of the road mean?",
-                options: ["Loading/unloading only", "Parking for 30 mins max", "Parking and waiting are strictly prohibited", "Resident parking only"],
+                q: "What is the maximum speed limit on a Cyprus motorway?",
+                options: ["80 km/h", "90 km/h", "100 km/h", "120 km/h"],
                 ans: 2,
-                exp: "Double yellow lines mean no parking and no waiting at any time."
-            },
-            {
-                q: "You arrive at an intersection where traffic lights are broken. Who has priority?",
-                options: ["Traffic going straight", "Traffic from the left", "Traffic from the right", "You do, if you flash your lights"],
-                ans: 2,
-                exp: "At an uncontrolled intersection, you must give way to vehicles approaching from the right."
+                exp: "The maximum speed on Cyprus motorways is 100 km/h."
             },
             {
                 q: "What is the minimum speed limit on a motorway in Cyprus?",
@@ -980,12 +995,211 @@
                 exp: "To ensure safety and traffic flow, the minimum speed on a motorway is 65 km/h (the maximum is 100 km/h)."
             },
             {
+                q: "What is the speed limit on national roads outside built-up areas?",
+                options: ["50 km/h", "65 km/h", "80 km/h", "100 km/h"],
+                ans: 2,
+                exp: "On national roads outside urban areas, the standard speed limit is 80 km/h."
+            },
+            {
+                q: "What does a circular sign with a red border and the number 30 inside mean?",
+                options: ["Minimum speed 30 km/h", "Maximum speed 30 km/h", "Road ends in 30 metres", "30 km/h recommended speed"],
+                ans: 1,
+                exp: "A circular sign with a red border showing a number is a maximum speed limit sign — you must not exceed 30 km/h."
+            },
+            // --- DISTRACTIONS & PHONE ---
+            {
+                q: "Is it legal to drink water from a bottle while driving?",
+                options: ["Yes, staying hydrated is essential", "Only at traffic lights", "No, eating and drinking while driving is illegal", "Only if it has a sports cap"],
+                ans: 2,
+                exp: "Cyprus has very strict laws against distractions. Eating or drinking anything (even water) while driving is an offense."
+            },
+            {
+                q: "When may you legally use a mobile phone while driving?",
+                options: ["When stationary at traffic lights", "Only with a hands-free system", "At speeds below 30 km/h", "Never, not even hands-free"],
+                ans: 1,
+                exp: "You may only use a phone with a properly fitted hands-free system. Holding a phone while driving is illegal."
+            },
+            {
+                q: "Which of these is a legal requirement regarding hands while driving?",
+                options: ["One hand must be on the wheel at all times", "Both hands must be on the wheel at all times", "Hands may leave the wheel when changing gear only", "No specific rule about hands"],
+                ans: 1,
+                exp: "Both hands must be on the steering wheel at all times. This reinforces Cyprus distraction rules."
+            },
+            // --- PARKING & LINES ---
+            {
+                q: "What do double yellow lines at the edge of the road mean?",
+                options: ["Loading/unloading only", "Parking for 30 mins max", "Parking and waiting are strictly prohibited", "Resident parking only"],
+                ans: 2,
+                exp: "Double yellow lines mean no parking and no waiting at any time."
+            },
+            {
+                q: "What does a single yellow line at the roadside typically indicate?",
+                options: ["No parking at any time", "Parking restrictions apply at certain times", "Free parking zone", "Loading bay only"],
+                ans: 1,
+                exp: "A single yellow line indicates parking restrictions that apply during certain hours — always check nearby time-plate signs."
+            },
+            {
+                q: "Where are you allowed to park near a junction?",
+                options: ["Within 5 metres of a junction", "Within 10 metres of a junction", "Not within 10 metres of a junction", "Anywhere, provided hazard lights are on"],
+                ans: 2,
+                exp: "Parking within 10 metres of a junction is prohibited as it reduces visibility and obstructs turning vehicles."
+            },
+            // --- PRIORITY & JUNCTIONS ---
+            {
+                q: "You arrive at an intersection where traffic lights are broken. Who has priority?",
+                options: ["Traffic going straight", "Traffic from the left", "Traffic from the right", "You do, if you flash your lights"],
+                ans: 2,
+                exp: "At an uncontrolled intersection, you must give way to vehicles approaching from the right."
+            },
+            {
+                q: "What must you do at a STOP sign?",
+                options: ["Slow down and proceed if clear", "Stop completely, then give way", "Give way without stopping", "Flash headlights and proceed"],
+                ans: 1,
+                exp: "A STOP sign requires a complete stop. You must come to a full stop before the line, then give way before proceeding."
+            },
+            {
+                q: "What does a triangular Give Way sign mean?",
+                options: ["Stop completely", "Give way to traffic on the main road", "Road narrows ahead", "Priority road ahead"],
+                ans: 1,
+                exp: "A Give Way (yield) sign means you must give priority to traffic on the intersecting road without necessarily stopping."
+            },
+            {
+                q: "What does a yellow diamond-shaped sign indicate?",
+                options: ["Warning of a hazard", "You are on a priority road", "No entry ahead", "End of priority road"],
+                ans: 1,
+                exp: "A yellow diamond sign indicates you are travelling on a priority road and have right of way at junctions."
+            },
+            // --- SEATBELTS & CHILDREN ---
+            {
+                q: "Are rear passengers required to wear seatbelts in Cyprus?",
+                options: ["Only on motorways", "Only children under 12", "Yes, all passengers front and rear", "No, only front passengers"],
+                ans: 2,
+                exp: "Seatbelts are mandatory for all passengers in all seats."
+            },
+            {
+                q: "What is the minimum age for a child to sit in the front seat?",
+                options: ["3 years old", "5 years old", "12 years old", "There is no age rule"],
+                ans: 1,
+                exp: "Children under 5 cannot travel in the front seat."
+            },
+            {
+                q: "Children aged 5 to 12 travelling in a car must use what?",
+                options: ["A normal adult seatbelt only", "An appropriate child restraint system", "A booster seat only", "Nothing if under 135 cm tall"],
+                ans: 1,
+                exp: "Children aged 5 to 12 must use an appropriate child restraint system."
+            },
+            // --- ALCOHOL ---
+            {
+                q: "What is the legal breath alcohol limit for standard drivers in Cyprus?",
+                options: ["0.09 micrograms per 100ml", "0.22 micrograms per 100ml", "0.35 micrograms per 100ml", "0.50 micrograms per 100ml"],
+                ans: 1,
+                exp: "The standard legal limit is 0.22 micrograms of alcohol per 100 millilitres of breath (approx 0.05% BAC)."
+            },
+            {
+                q: "Which group of drivers has a lower alcohol limit than the standard?",
+                options: ["Drivers over 70", "Drivers with automatic cars", "Novice drivers and motorcyclists", "Drivers on national roads only"],
+                ans: 2,
+                exp: "Novice drivers, commercial drivers, and motorcyclists have a much lower limit of 0.09 micrograms per 100ml."
+            },
+            // --- HORN & LIGHTS ---
+            {
                 q: "When can you use your car horn in built-up areas?",
                 options: ["To greet someone", "To warn others of danger", "If someone is driving too slowly", "Between 10 PM and 6 AM"],
                 ans: 1,
                 exp: "Horns should only be used to warn other road users of imminent danger, never out of frustration or as a greeting."
+            },
+            {
+                q: "When must you use dipped headlights?",
+                options: ["Only at night", "At night and in poor visibility", "Only in tunnels", "Headlights are optional in Cyprus"],
+                ans: 1,
+                exp: "Dipped headlights must be used at night and whenever visibility is reduced, such as in fog or heavy rain."
+            },
+            {
+                q: "What does a flashing amber traffic light mean?",
+                options: ["Stop and wait", "Proceed with caution", "Traffic light is broken, treat as a give way", "Speed up to clear the junction"],
+                ans: 2,
+                exp: "A flashing amber light means proceed with caution — it is often used at pedestrian crossings or late at night."
+            },
+            // --- ROAD SIGNS ---
+            {
+                q: "What shape are warning signs in Cyprus?",
+                options: ["Circular with red border", "Rectangular", "Triangular with red border", "Diamond shaped"],
+                ans: 2,
+                exp: "Warning signs are triangular with a red border, alerting drivers to hazards ahead."
+            },
+            {
+                q: "What colour is a mandatory instruction sign (e.g. turn left, roundabout)?",
+                options: ["Red circle", "Blue circle", "Yellow diamond", "Green rectangle"],
+                ans: 1,
+                exp: "Mandatory instruction signs are circular with a blue background, indicating actions you must take."
+            },
+            {
+                q: "What does a blue rectangular sign typically provide?",
+                options: ["A prohibition", "A warning", "Information or directions", "A mandatory instruction"],
+                ans: 2,
+                exp: "Rectangular blue signs are information signs, providing guidance such as motorway signs, parking, and services."
+            },
+            // --- OVERTAKING ---
+            {
+                q: "When is it illegal to overtake?",
+                options: ["On a clear straight road", "Near the brow of a hill or bend", "On a dual carriageway", "When the vehicle ahead is slow"],
+                ans: 1,
+                exp: "Overtaking near bends, hills, junctions, or where visibility is reduced is illegal and extremely dangerous."
+            },
+            {
+                q: "What does a solid white centre line mean?",
+                options: ["Keep left but crossing is permitted", "No overtaking — do not cross the line", "Lane reserved for buses", "Cycle lane boundary"],
+                ans: 1,
+                exp: "A continuous solid white centre line means you must not cross or straddle it — overtaking is prohibited."
+            },
+            // --- EMERGENCY & SAFETY ---
+            {
+                q: "If your vehicle breaks down on a motorway, where should you stop?",
+                options: ["In the left lane with hazards on", "On the hard shoulder", "In the central reservation", "Anywhere visible to other drivers"],
+                ans: 1,
+                exp: "Always use the hard shoulder in an emergency on a motorway, switch on hazard lights, and exit the vehicle safely."
+            },
+            {
+                q: "What must you carry in your vehicle by law in Cyprus?",
+                options: ["A fire extinguisher only", "A first aid kit only", "A warning triangle and first aid kit", "A reflective jacket and spare tyre"],
+                ans: 2,
+                exp: "Drivers in Cyprus are required to carry a warning triangle and a first aid kit."
+            },
+            {
+                q: "What should you do immediately after a road collision involving injury?",
+                options: ["Move vehicles off road first", "Call police and emergency services", "Exchange details and leave", "Take photos and continue journey"],
+                ans: 1,
+                exp: "In an injury collision you must stop, call the police and emergency services, and remain at the scene."
+            },
+            // --- PEDESTRIANS ---
+            {
+                q: "At a zebra crossing with a pedestrian waiting, what must you do?",
+                options: ["Sound horn to warn them", "Give way and allow them to cross", "Proceed if they are not yet on the crossing", "Flash headlights then proceed"],
+                ans: 1,
+                exp: "You must give way to pedestrians waiting at or on a zebra crossing."
+            },
+            {
+                q: "What does a flashing green man at a pedestrian crossing signal mean for drivers?",
+                options: ["Pedestrians have cleared — proceed freely", "Pedestrians may still be crossing — prepare to stop", "Green phase about to begin", "No pedestrians detected — free to go"],
+                ans: 1,
+                exp: "A flashing green man means pedestrians may still be crossing — drivers should prepare to stop and not try to race through."
+            },
+            // --- TOWING & LOADS ---
+            {
+                q: "What is the maximum speed for a vehicle towing a trailer on a national road?",
+                options: ["50 km/h", "65 km/h", "80 km/h", "Same as standard vehicles"],
+                ans: 1,
+                exp: "Vehicles towing trailers are subject to reduced speed limits for safety — typically 65–80 km/h depending on context."
+            },
+            {
+                q: "If a load sticks out beyond the rear of a vehicle, what must be fitted?",
+                options: ["A red warning flag or marker", "A flashing amber light", "A reflective sticker on the car", "Nothing is required"],
+                ans: 0,
+                exp: "Protruding loads must be clearly marked with a red flag or marker to warn other road users."
             }
         ];
+
+        const quizQuestions = shuffleArray(allQuizQuestions);
 
         let currentQuestionIndex = 0;
         let score = 0;
