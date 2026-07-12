@@ -331,10 +331,14 @@
     </main>
 
     <footer class="border-t border-gray-200 bg-white/80">
-        <div class="max-w-6xl mx-auto px-4 py-4 text-xs text-gray-600">
-            Disclaimer: Road sign visuals are sourced from the Cyprus signs reference catalog at
-            <a href="https://cysigns.online/en/signs" target="_blank" rel="noopener noreferrer" class="text-blue-700 hover:underline">cysigns.online</a>.
-            Always verify current legal requirements with official Cyprus authorities.
+        <div class="max-w-6xl mx-auto px-4 py-4 text-xs text-gray-600 space-y-1">
+            <p>
+                Many road sign images are Crown copyright and reproduced under the
+                <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" target="_blank" rel="noopener noreferrer" class="text-blue-700 hover:underline">Open Government Licence v3.0</a>
+                from the <a href="https://www.gov.uk/guidance/traffic-sign-images" target="_blank" rel="noopener noreferrer" class="text-blue-700 hover:underline">UK Government traffic sign image library</a>.
+                Additional sign references sourced from <a href="https://cysigns.online/en/signs" target="_blank" rel="noopener noreferrer" class="text-blue-700 hover:underline">cysigns.online</a>.
+            </p>
+            <p>Always verify current legal requirements with official Cyprus authorities before driving.</p>
         </div>
     </footer>
 
@@ -734,6 +738,84 @@
             'no-parking': 'no-parking-or-waiting'
         };
 
+        // UK GOV sign paths (Crown copyright, Open Government Licence v3.0)
+        // Maps Cyprus sign slug → local path inside /signs/ folder
+        const ukGovSignPaths = {
+            // WARNING SIGNS (root signs/ folder, TSRGD numbering)
+            'children':                               'signs/547.1.jpg',
+            'dangerous-bend':                         'signs/510.jpg',
+            'double-dangerous-bend':                  'signs/512.1.jpg',
+            'domestic-animals':                       'signs/557.jpg',
+            'elderly-or-disabled-pedestrians':        'signs/545.jpg',
+            'falling-rocks':                          'signs/528.jpg',
+            'hump-bridge':                            'signs/522.jpg',
+            'junction-on-bend':                       'signs/502.jpg',
+            'junction-on-bend-1':                     'signs/502.jpg',
+            'junction-with-a-secondary-road':         'signs/504.1.jpg',
+            'junction-with-a-secondary-road-1':       'signs/503.jpg',
+            'junction-with-a-secondary-road-2':       'signs/505.1.jpg',
+            'junction-with-priority-to-the-right':    'signs/504.1.jpg',
+            'level-crossing-with-barriers':           'signs/level-crossing-signs-jpg/773.jpg',
+            'level-crossing-without-barrier':         'signs/544.1.jpg',
+            'loose-road-surface':                     'signs/526.jpg',
+            'pedestrian-crossing-1':                  'signs/545.jpg',
+            'pedestrians':                            'signs/545.jpg',
+            'road-narrows-on-both-sides':             'signs/519.jpg',
+            'road-narrows-on-one-side':               'signs/520.jpg',
+            'road-hump':                              'signs/554.1.jpg',
+            'roadworks':                              'signs/road-works-and-temporary-jpg/7001.jpg',
+            'slippery-road':                          'signs/527.jpg',
+            'soft-verges-ahead':                      'signs/523.1.jpg',
+            'steep-ascent':                           'signs/517.jpg',
+            'steep-descent':                          'signs/516.jpg',
+            't-junction':                             'signs/503.jpg',
+            'traffic-signals':                        'signs/506.1.jpg',
+            'two-way-traffic':                        'signs/508.1.jpg',
+            'two-way-traffic-crosses-one-way-road':   'signs/507.1.jpg',
+            'uneven-road':                            'signs/525.jpg',
+            'wild-animals':                           'signs/572.jpg',
+            // REGULATORY / PROHIBITORY (signs/regulatory-signs-jpg/)
+            'end-of-all-restrictions':                'signs/regulatory-signs-jpg/633.jpg',
+            'end-of-minimum-speed-limit':             'signs/regulatory-signs-jpg/609A.jpg',
+            'end-of-no-overtaking':                   'signs/regulatory-signs-jpg/633.jpg',
+            'end-of-priority-road':                   'signs/regulatory-signs-jpg/652.jpg',
+            'give-way':                               'signs/regulatory-signs-jpg/2501.jpg',
+            'go-straight-ahead-only':                 'signs/regulatory-signs-jpg/601.1.jpg',
+            'go-straight-or-turn-right-ahead':        'signs/regulatory-signs-jpg/601.1.jpg',
+            'keep-left':                              'signs/regulatory-signs-jpg/606.jpg',
+            'maximum-height':                         'signs/regulatory-signs-jpg/622.1A.jpg',
+            'maximum-weight':                         'signs/regulatory-signs-jpg/622.4.jpg',
+            'maximum-width':                          'signs/regulatory-signs-jpg/622.2.jpg',
+            'minimum-speed-limit':                    'signs/regulatory-signs-jpg/609.jpg',
+            'no-cycling':                             'signs/regulatory-signs-jpg/625.1.jpg',
+            'no-entry':                               'signs/regulatory-signs-jpg/616.jpg',
+            'no-entry-for-mopeds':                    'signs/regulatory-signs-jpg/618.1B.jpg',
+            'no-entry-for-motorcycles':               'signs/regulatory-signs-jpg/618.1B.jpg',
+            'no-heavy-goods-vehicles':                'signs/regulatory-signs-jpg/622.6.jpg',
+            'no-motor-vehicles':                      'signs/regulatory-signs-jpg/618.1B.jpg',
+            'no-motor-vehicles-except-motorcycles':   'signs/regulatory-signs-jpg/618.1A.jpg',
+            'no-overtaking':                          'signs/regulatory-signs-jpg/632.jpg',
+            'no-overtaking-1':                        'signs/regulatory-signs-jpg/632.jpg',
+            'no-overtaking-2':                        'signs/regulatory-signs-jpg/632.jpg',
+            'no-parking-or-waiting':                  'signs/regulatory-signs-jpg/629.jpg',
+            'no-right-turn':                          'signs/regulatory-signs-jpg/619.jpg',
+            'no-stopping':                            'signs/regulatory-signs-jpg/629.1.jpg',
+            'no-u-turn':                              'signs/regulatory-signs-jpg/617.jpg',
+            'no-vehicle-over-length-shown':           'signs/regulatory-signs-jpg/622.5.jpg',
+            'no-vehicles':                            'signs/regulatory-signs-jpg/618.jpg',
+            'one-way-street':                         'signs/regulatory-signs-jpg/615.jpg',
+            'one-way-street-1':                       'signs/regulatory-signs-jpg/615.1.jpg',
+            'pass-on-either-side':                    'signs/regulatory-signs-jpg/612.jpg',
+            'priority-road':                          'signs/regulatory-signs-jpg/651.jpg',
+            'roundabout-1':                           'signs/regulatory-signs-jpg/611.1.jpg',
+            'turn-left-ahead':                        'signs/regulatory-signs-jpg/602.jpg',
+            'turn-left-or-right-ahead':               'signs/regulatory-signs-jpg/608.jpg',
+            'turn-right':                             'signs/regulatory-signs-jpg/613.jpg',
+            // PEDESTRIAN / CYCLE (signs/pedestrian,-cycle,-equestrian-jpg/)
+            'pedestrians-only':                       'signs/pedestrian,-cycle,-equestrian-jpg/4003.1.jpg',
+            'pedal-cycle-route-crossing-the-road':    'signs/pedestrian,-cycle,-equestrian-jpg/4002.1.jpg',
+        };
+
         const officialCatalogFlat = sourcedSignSlugs.map((slug, idx) => {
             const nameFromSlug = slug
                 .replace(/\.jpg$/i, '')
@@ -742,12 +824,16 @@
                 .replace(/\s+/g, ' ')
                 .trim();
 
+            const slugBase = slug.replace(/\.jpg$/i, '');
+            const ukPath = ukGovSignPaths[slugBase];
+
             return {
                 code: `CY-SRC-${String(idx + 1).padStart(3, '0')}`,
                 name: nameFromSlug,
-                slug: slug.replace(/\.jpg$/i, ''),
-                imageUrl: `https://cyprus-road-signs.s3.eu-central-1.amazonaws.com/signs/${slug}`,
-                sourceUrl: CY_SIGNS_SOURCE,
+                slug: slugBase,
+                imageUrl: ukPath || `https://cyprus-road-signs.s3.eu-central-1.amazonaws.com/signs/${slug}`,
+                imageSource: ukPath ? 'uk-gov' : 'cysigns',
+                sourceUrl: ukPath ? 'https://www.gov.uk/guidance/traffic-sign-images' : CY_SIGNS_SOURCE,
                 status: 'reference'
             };
         });
@@ -765,9 +851,10 @@
                 localCode: `APP-SRC-${String(idx + 1).padStart(3, '0')}`,
                 officialCode: entry.code,
                 catalogSlug: entry.slug,
+                imageSource: entry.imageSource,
                 source: {
-                    name: 'CySigns online catalog',
-                    url: CY_SIGNS_SOURCE,
+                    name: entry.imageSource === 'uk-gov' ? 'UK Government (Crown Copyright)' : 'CySigns online catalog',
+                    url: entry.sourceUrl,
                     verifiedAt: CY_SIGNS_VERIFIED_AT,
                     status: 'mapped'
                 }
