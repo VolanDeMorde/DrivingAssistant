@@ -1,0 +1,1554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyprus Driving Learner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+
+        /* 3D Flashcard Flip Styles */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .transform-style-preserve-3d {
+            transform-style: preserve-3d;
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+
+        /* Sign specifics */
+        .sign-slash {
+            position: absolute;
+            width: 110%;
+            height: 8px;
+            background-color: #d32f2f;
+            top: 50%;
+            left: -5%;
+            transform: rotate(45deg);
+            z-index: 20;
+            border: 1px solid white;
+        }
+        .sign-slash-reverse {
+            transform: rotate(-45deg);
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen text-gray-800">
+
+    <!-- Header & Navigation -->
+    <header class="bg-blue-700 text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <i class="fa-solid fa-car-side text-2xl"></i>
+                <h1 class="text-xl font-bold tracking-tight">Cyprus Driving Learner</h1>
+            </div>
+            
+            <!-- Desktop Nav -->
+            <nav class="hidden md:flex space-x-1 bg-blue-800 p-1 rounded-lg">
+                <button onclick="switchTab('signs')" id="tab-signs" class="px-4 py-2 rounded-md font-medium transition-colors bg-white text-blue-800 shadow-sm">Road Signs</button>
+                <button onclick="switchTab('quiz')" id="tab-quiz" class="px-4 py-2 rounded-md font-medium transition-colors text-white hover:bg-blue-600">Practice Quiz</button>
+                <button onclick="switchTab('scenarios')" id="tab-scenarios" class="px-4 py-2 rounded-md font-medium transition-colors text-white hover:bg-blue-600">Scenarios</button>
+                <button onclick="switchTab('guide')" id="tab-guide" class="px-4 py-2 rounded-md font-medium transition-colors text-white hover:bg-blue-600">Rules Guide</button>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden text-white focus:outline-none" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+                <i class="fa-solid fa-bars text-2xl"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Nav -->
+        <nav id="mobile-menu" class="hidden md:hidden bg-blue-800 px-4 pt-2 pb-4 space-y-2 border-t border-blue-600">
+            <button onclick="switchTab('signs'); document.getElementById('mobile-menu').classList.add('hidden')" class="block w-full text-left px-3 py-2 rounded-md font-medium text-white hover:bg-blue-600">Road Signs</button>
+            <button onclick="switchTab('quiz'); document.getElementById('mobile-menu').classList.add('hidden')" class="block w-full text-left px-3 py-2 rounded-md font-medium text-white hover:bg-blue-600">Practice Quiz</button>
+            <button onclick="switchTab('scenarios'); document.getElementById('mobile-menu').classList.add('hidden')" class="block w-full text-left px-3 py-2 rounded-md font-medium text-white hover:bg-blue-600">Scenarios</button>
+            <button onclick="switchTab('guide'); document.getElementById('mobile-menu').classList.add('hidden')" class="block w-full text-left px-3 py-2 rounded-md font-medium text-white hover:bg-blue-600">Rules Guide</button>
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-6xl mx-auto w-full p-4 sm:p-6">
+
+        <!-- ==================== SECTION: ROAD SIGNS ==================== -->
+        <section id="section-signs" class="block animate-fade-in">
+            <div class="text-center mb-6">
+                <h2 class="text-3xl font-bold mb-2">Cyprus Road Signs</h2>
+                <p class="text-gray-600">Click on any card to reveal the sign's meaning.</p>
+            </div>
+
+            <!-- Filters -->
+            <div class="flex flex-wrap justify-center gap-2 mb-8" id="filters-container">
+                <button onclick="filterSigns('all')" class="filter-btn active px-4 py-2 rounded-full bg-blue-600 text-white text-sm font-medium shadow-sm transition-colors" data-filter="all">All</button>
+                <button onclick="filterSigns('warning')" class="filter-btn px-4 py-2 rounded-full bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm font-medium transition-colors" data-filter="warning">Warning</button>
+                <button onclick="filterSigns('prohibitory')" class="filter-btn px-4 py-2 rounded-full bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm font-medium transition-colors" data-filter="prohibitory">Prohibitory</button>
+                <button onclick="filterSigns('mandatory')" class="filter-btn px-4 py-2 rounded-full bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm font-medium transition-colors" data-filter="mandatory">Mandatory</button>
+                <button onclick="filterSigns('priority')" class="filter-btn px-4 py-2 rounded-full bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm font-medium transition-colors" data-filter="priority">Priority</button>
+                <button onclick="filterSigns('information')" class="filter-btn px-4 py-2 rounded-full bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm font-medium transition-colors" data-filter="information">Information</button>
+            </div>
+
+            <div class="max-w-xl mx-auto mb-3">
+                <label for="signs-search" class="sr-only">Search signs</label>
+                <input id="signs-search" type="text" oninput="searchSigns(this.value)" placeholder="Search signs by name, category, or keyword (e.g. roundabout, no entry, speed)" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-300 focus:border-blue-400 outline-none text-sm" />
+            </div>
+            <p id="signs-count" class="text-center text-xs text-gray-500 mb-6"></p>
+
+            <div class="max-w-4xl mx-auto mb-6 bg-amber-50 border border-amber-200 rounded-xl p-4">
+                <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+                    <h3 class="font-semibold text-amber-900">Catalog Coverage Tracker</h3>
+                    <button onclick="showMissingOnly()" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-white border border-amber-300 text-amber-800 hover:bg-amber-100">Show Missing Only</button>
+                </div>
+                <div id="catalog-sync-summary" class="text-sm text-amber-900 mb-2"></div>
+                <div id="catalog-missing-list" class="flex flex-wrap gap-2"></div>
+            </div>
+
+            <!-- Grid -->
+            <div id="flashcards-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                <!-- Flashcards injected here by JS -->
+            </div>
+        </section>
+
+        <!-- ==================== SECTION: QUIZ ==================== -->
+        <section id="section-quiz" class="hidden max-w-2xl mx-auto">
+            <div class="bg-white rounded-2xl shadow-lg p-6 sm:p-8 border border-gray-100">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Knowledge Test</h2>
+                    <span id="quiz-progress" class="bg-blue-100 text-blue-800 text-sm font-semibold px-3 py-1 rounded-full">Question 1/10</span>
+                </div>
+
+                <div id="quiz-content">
+                    <!-- Progress Bar -->
+                    <div class="w-full bg-gray-200 rounded-full h-2 mb-6">
+                        <div id="quiz-progress-bar" class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: 10%"></div>
+                    </div>
+
+                    <h3 id="question-text" class="text-xl font-medium text-gray-900 mb-6 leading-relaxed">
+                        <!-- Question Text -->
+                    </h3>
+
+                    <div id="options-container" class="space-y-3 mb-8">
+                        <!-- Options injected here -->
+                    </div>
+
+                    <!-- Feedback Area (Hidden by default) -->
+                    <div id="feedback-area" class="hidden mb-6 p-4 rounded-xl border">
+                        <div class="flex items-start space-x-3">
+                            <div id="feedback-icon" class="mt-0.5"></div>
+                            <div>
+                                <h4 id="feedback-title" class="font-bold text-lg mb-1"></h4>
+                                <p id="feedback-text" class="text-gray-700 text-sm"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end">
+                        <button id="next-btn" onclick="nextQuestion()" class="hidden bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors shadow-md">
+                            Next Question <i class="fa-solid fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quiz Results (Hidden by default) -->
+                <div id="quiz-results" class="hidden text-center py-8">
+                    <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-blue-50 mb-6">
+                        <i class="fa-solid fa-trophy text-5xl text-yellow-500"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold text-gray-900 mb-2">Quiz Complete!</h2>
+                    <p class="text-lg text-gray-600 mb-6">You scored <span id="final-score" class="font-bold text-blue-600 text-2xl">0</span> out of <span id="total-questions" class="font-bold">10</span>.</p>
+                    <button onclick="startQuiz()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors shadow-md">
+                        <i class="fa-solid fa-rotate-right mr-2"></i> Retake Quiz
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SECTION: SCENARIOS ==================== -->
+        <section id="section-scenarios" class="hidden max-w-3xl mx-auto">
+            <div class="bg-white rounded-2xl shadow-lg p-6 sm:p-8 border border-gray-100">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Road Scenarios</h2>
+                    <span id="scenario-progress" class="bg-indigo-100 text-indigo-800 text-sm font-semibold px-3 py-1 rounded-full">Scenario 1/100</span>
+                </div>
+
+                <div class="mb-5 flex flex-wrap gap-2">
+                    <button id="scenario-mode-all" onclick="setScenarioMode('full')" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white">All (100)</button>
+                    <button id="scenario-mode-easy" onclick="setScenarioMode('easy')" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white border border-gray-300 text-gray-700 hover:bg-gray-50">Easy</button>
+                    <button id="scenario-mode-medium" onclick="setScenarioMode('medium')" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white border border-gray-300 text-gray-700 hover:bg-gray-50">Medium</button>
+                    <button id="scenario-mode-hard" onclick="setScenarioMode('hard')" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white border border-gray-300 text-gray-700 hover:bg-gray-50">Hard</button>
+                </div>
+
+                <div id="scenario-content">
+                    <div class="w-full bg-gray-200 rounded-full h-2 mb-6">
+                        <div id="scenario-progress-bar" class="bg-indigo-600 h-2 rounded-full transition-all duration-300" style="width: 1%"></div>
+                    </div>
+
+                    <div class="mb-4 flex flex-wrap gap-2">
+                        <span id="scenario-topic" class="inline-flex items-center px-2.5 py-1 rounded-md bg-gray-100 text-gray-700 text-xs font-semibold uppercase tracking-wide"></span>
+                        <span id="scenario-difficulty" class="inline-flex items-center px-2.5 py-1 rounded-md bg-amber-100 text-amber-800 text-xs font-semibold uppercase tracking-wide"></span>
+                    </div>
+
+                    <h3 id="scenario-text" class="text-xl font-medium text-gray-900 mb-6 leading-relaxed"></h3>
+
+                    <div id="scenario-options" class="space-y-3 mb-8"></div>
+
+                    <div id="scenario-feedback" class="hidden mb-6 p-4 rounded-xl border">
+                        <div class="flex items-start space-x-3">
+                            <div id="scenario-feedback-icon" class="mt-0.5"></div>
+                            <div>
+                                <h4 id="scenario-feedback-title" class="font-bold text-lg mb-1"></h4>
+                                <p id="scenario-feedback-text" class="text-gray-700 text-sm mb-2"></p>
+                                <p id="scenario-feedback-rule" class="text-xs text-gray-500 font-medium"></p>
+                                <div id="scenario-related-signs" class="mt-3 flex flex-wrap gap-2"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end">
+                        <button id="scenario-next-btn" onclick="nextScenario()" class="hidden bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors shadow-md">
+                            Next Scenario <i class="fa-solid fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="scenario-results" class="hidden text-center py-8">
+                    <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-indigo-50 mb-6">
+                        <i id="scenario-results-icon" class="fa-solid fa-map-signs text-5xl text-indigo-500"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold text-gray-900 mb-2">Scenario Session Complete</h2>
+                    <p class="text-lg text-gray-600 mb-2">You solved <span id="scenario-final-score" class="font-bold text-indigo-600 text-2xl">0</span> out of <span id="scenario-total" class="font-bold">10</span>.</p>
+                    <p class="text-sm text-gray-600 mb-6">Best score: <span id="scenario-best-score" class="font-semibold">0</span></p>
+
+                    <div class="text-left max-w-md mx-auto mb-6">
+                        <h3 class="font-semibold text-gray-800 mb-2">Weak Topics</h3>
+                        <div id="weak-topics-list" class="space-y-2 text-sm text-gray-700"></div>
+                    </div>
+
+                    <button onclick="startScenarios()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors shadow-md">
+                        <i class="fa-solid fa-rotate-right mr-2"></i> Practice Again
+                    </button>
+                    <button onclick="startWeakTopicDrill()" class="ml-0 mt-3 sm:mt-0 sm:ml-3 bg-white hover:bg-gray-50 text-indigo-700 border border-indigo-300 font-semibold py-3 px-8 rounded-lg transition-colors shadow-sm">
+                        <i class="fa-solid fa-bullseye mr-2"></i> Drill Weak Topics
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SECTION: GUIDE ==================== -->
+        <section id="section-guide" class="hidden max-w-4xl mx-auto space-y-8">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold mb-2">Essential Rules of the Road</h2>
+                <p class="text-gray-600">Key things you must know before driving in Cyprus.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Rule Card -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+                    <div class="flex items-center mb-4 text-blue-700">
+                        <i class="fa-solid fa-arrow-left text-2xl mr-3"></i>
+                        <h3 class="text-xl font-bold">Drive on the Left</h3>
+                    </div>
+                    <p class="text-gray-700 text-sm leading-relaxed">Unlike most of Europe, vehicles in Cyprus drive on the <strong>left-hand side</strong> of the road and overtake on the right. This is a legacy of British rule. Ensure you look right, then left, then right again when emerging at junctions.</p>
+                </div>
+
+                <!-- Rule Card -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+                    <div class="flex items-center mb-4 text-red-600">
+                        <i class="fa-solid fa-ban text-2xl mr-3"></i>
+                        <h3 class="text-xl font-bold">Zero Distractions</h3>
+                    </div>
+                    <p class="text-gray-700 text-sm leading-relaxed">It is strictly prohibited to use a mobile phone (unless hands-free). Furthermore, <strong>eating and drinking (even water) while driving is illegal</strong>. You must have both hands on the wheel at all times.</p>
+                </div>
+
+                <!-- Rule Card -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+                    <div class="flex items-center mb-4 text-yellow-600">
+                        <i class="fa-solid fa-arrows-spin text-2xl mr-3"></i>
+                        <h3 class="text-xl font-bold">Roundabout Rules</h3>
+                    </div>
+                    <p class="text-gray-700 text-sm leading-relaxed">Traffic already on the roundabout has priority. Because you drive on the left, you approach clockwise and <strong>give way to traffic approaching from your right</strong>.</p>
+                </div>
+
+                <!-- Rule Card -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+                    <div class="flex items-center mb-4 text-green-700">
+                        <i class="fa-solid fa-gauge-high text-2xl mr-3"></i>
+                        <h3 class="text-xl font-bold">Speed Limits</h3>
+                    </div>
+                    <ul class="text-gray-700 text-sm leading-relaxed list-disc list-inside">
+                        <li><strong>Built-up areas:</strong> 50 km/h</li>
+                        <li><strong>National roads:</strong> 80 km/h</li>
+                        <li><strong>Motorways:</strong> Max 100 km/h, Min 65 km/h</li>
+                    </ul>
+                </div>
+                
+                <!-- Rule Card -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+                    <div class="flex items-center mb-4 text-purple-700">
+                        <i class="fa-solid fa-wine-glass text-2xl mr-3"></i>
+                        <h3 class="text-xl font-bold">Alcohol Limits</h3>
+                    </div>
+                    <p class="text-gray-700 text-sm leading-relaxed">The legal limit is 0.22 micrograms of alcohol per 100 milliliters of breath (approx 0.05% BAC). For novice drivers, commercial drivers, and motorcyclists, the limit is drastically lower at 0.09 micrograms.</p>
+                </div>
+
+                <!-- Rule Card -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+                    <div class="flex items-center mb-4 text-orange-600">
+                        <i class="fa-solid fa-child-reaching text-2xl mr-3"></i>
+                        <h3 class="text-xl font-bold">Seatbelts & Children</h3>
+                    </div>
+                    <p class="text-gray-700 text-sm leading-relaxed">Seatbelts are mandatory for all passengers, front and rear. Children under 5 cannot travel in the front seat. Children aged 5 to 12 must use an appropriate child restraint system.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="border-t border-gray-200 bg-white/80">
+        <div class="max-w-6xl mx-auto px-4 py-4 text-xs text-gray-600">
+            Disclaimer: Road sign visuals are sourced from the Cyprus signs reference catalog at
+            <a href="https://cysigns.online/en/signs" target="_blank" rel="noopener noreferrer" class="text-blue-700 hover:underline">cysigns.online</a>.
+            Always verify current legal requirements with official Cyprus authorities.
+        </div>
+    </footer>
+
+    <script>
+        // ==================== UI LOGIC & TAB SWITCHING ====================
+        function switchTab(tabId) {
+            // Hide all sections
+            document.getElementById('section-signs').classList.add('hidden');
+            document.getElementById('section-quiz').classList.add('hidden');
+            document.getElementById('section-scenarios').classList.add('hidden');
+            document.getElementById('section-guide').classList.add('hidden');
+
+            // Reset Nav styling
+            const tabs = ['tab-signs', 'tab-quiz', 'tab-scenarios', 'tab-guide'];
+            tabs.forEach(id => {
+                const el = document.getElementById(id);
+                if(el) {
+                    el.classList.remove('bg-white', 'text-blue-800', 'shadow-sm');
+                    el.classList.add('text-white', 'hover:bg-blue-600');
+                }
+            });
+
+            // Show selected
+            document.getElementById(`section-${tabId}`).classList.remove('hidden');
+            
+            // Style selected Nav
+            const activeTab = document.getElementById(`tab-${tabId}`);
+            if(activeTab) {
+                activeTab.classList.remove('text-white', 'hover:bg-blue-600');
+                activeTab.classList.add('bg-white', 'text-blue-800', 'shadow-sm');
+            }
+
+            // Init quiz if selected
+            if (tabId === 'quiz' && document.getElementById('quiz-results').classList.contains('hidden') === false && currentQuestionIndex === 0) {
+                startQuiz();
+            } else if (tabId === 'quiz' && currentQuestionIndex === 0 && document.getElementById('quiz-results').classList.contains('hidden')) {
+                startQuiz(); // First time load
+            }
+
+            if (tabId === 'scenarios' && document.getElementById('scenario-results').classList.contains('hidden') === false && currentScenarioIndex === 0) {
+                startScenarios();
+            } else if (tabId === 'scenarios' && currentScenarioIndex === 0 && document.getElementById('scenario-results').classList.contains('hidden')) {
+                startScenarios();
+            }
+        }
+
+
+        // ==================== ROBUST ROAD SIGN GENERATOR ====================
+        // Instead of foreignObject, we use HTML/CSS layering over basic SVG shapes. This prevents rendering bugs.
+        function generateSignHTML(type, iconClass, textContent, withSlash) {
+            let bgSvg = '';
+            let contentLayer = '';
+            let slashLayer = withSlash ? `<div class="sign-slash"></div>` : '';
+
+            // 1. Generate the content (Text or FontAwesome Icon)
+            if (textContent) {
+                let color = (type === 'mandatory' || type === 'info' || type === 'stop') ? 'white' : 'black';
+                contentLayer = `<span class="absolute z-10 font-bold text-3xl" style="color: ${color};">${textContent}</span>`;
+            } else if (iconClass) {
+                let color = (type === 'mandatory' || type === 'info') ? 'white' : '#1f2937'; // dark gray for contrast
+                let sizeClass = 'text-4xl';
+                let extraClasses = '';
+                
+                // Adjust position for warning triangle (needs to be pushed down slightly)
+                if (type === 'warning') {
+                    extraClasses = 'mt-4 text-3xl'; 
+                }
+                contentLayer = `<i class="${iconClass} absolute z-10 ${sizeClass} ${extraClasses}" style="color: ${color};"></i>`;
+            }
+
+            // 2. Generate the background shape
+            if (type === 'warning') {
+                bgSvg = `<svg viewBox="0 0 100 100" class="absolute inset-0 w-full h-full drop-shadow-sm"><polygon points="50,5 95,90 5,90" fill="#fff" stroke="#d32f2f" stroke-width="8" stroke-linejoin="round"/></svg>`;
+            } else if (type === 'prohibitory') {
+                bgSvg = `<svg viewBox="0 0 100 100" class="absolute inset-0 w-full h-full drop-shadow-sm"><circle cx="50" cy="50" r="45" fill="#fff" stroke="#d32f2f" stroke-width="10"/></svg>`;
+            } else if (type === 'mandatory') {
+                bgSvg = `<svg viewBox="0 0 100 100" class="absolute inset-0 w-full h-full drop-shadow-sm"><circle cx="50" cy="50" r="45" fill="#1e40af" /></svg>`; // deep blue
+            } else if (type === 'info') {
+                bgSvg = `<svg viewBox="0 0 100 100" class="absolute inset-0 w-full h-full drop-shadow-sm"><rect x="10" y="10" width="80" height="80" rx="10" fill="#1e40af" stroke="#fff" stroke-width="2"/></svg>`;
+            } else if (type === 'stop') {
+                bgSvg = `<svg viewBox="0 0 100 100" class="absolute inset-0 w-full h-full drop-shadow-sm"><polygon points="30,5 70,5 95,30 95,70 70,95 30,95 5,70 5,30" fill="#d32f2f" stroke="#fff" stroke-width="2" /></svg>`;
+                contentLayer = `<span class="absolute z-10 font-bold text-white text-2xl tracking-wide">STOP</span>`;
+            } else if (type === 'yield') {
+                bgSvg = `<svg viewBox="0 0 100 100" class="absolute inset-0 w-full h-full drop-shadow-sm"><polygon points="50,95 95,10 5,10" fill="#fff" stroke="#d32f2f" stroke-width="10" stroke-linejoin="round"/></svg>`;
+            } else if (type === 'priority-road') {
+                bgSvg = `<svg viewBox="0 0 100 100" class="absolute inset-0 w-full h-full drop-shadow-sm"><polygon points="50,5 95,50 50,95 5,50" fill="#fff" stroke="#000" stroke-width="2"/><polygon points="50,15 85,50 50,85 15,50" fill="#facc15" /></svg>`;
+            } else if (type === 'no-entry') {
+                bgSvg = `<svg viewBox="0 0 100 100" class="absolute inset-0 w-full h-full drop-shadow-sm"><circle cx="50" cy="50" r="45" fill="#d32f2f" /><rect x="20" y="42" width="60" height="16" fill="#fff" /></svg>`;
+            } else if (type === 'no-parking') {
+                 bgSvg = `<svg viewBox="0 0 100 100" class="absolute inset-0 w-full h-full drop-shadow-sm"><circle cx="50" cy="50" r="45" fill="#1e40af" stroke="#d32f2f" stroke-width="10"/></svg>`;
+                 slashLayer = `<div class="sign-slash"></div>`;
+                 contentLayer = '';
+            } else if (type === 'no-stopping') {
+                 bgSvg = `<svg viewBox="0 0 100 100" class="absolute inset-0 w-full h-full drop-shadow-sm"><circle cx="50" cy="50" r="45" fill="#1e40af" stroke="#d32f2f" stroke-width="10"/></svg>`;
+                 slashLayer = `<div class="sign-slash"></div><div class="sign-slash sign-slash-reverse"></div>`;
+                 contentLayer = '';
+            }
+
+            // Combine into a container
+            return `
+                <div class="relative w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center mx-auto overflow-hidden rounded-full">
+                    ${bgSvg}
+                    ${contentLayer}
+                    ${slashLayer}
+                </div>
+            `;
+        }
+
+        function generateImageSignHTML(imageUrl, altText) {
+            return `
+                <div class="relative w-full h-full flex items-center justify-center mx-auto overflow-hidden rounded-lg bg-white border border-gray-100 p-2">
+                    <img src="${imageUrl}" alt="${altText}" loading="lazy" class="max-w-full max-h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                    <div style="display:none;" class="w-full h-full items-center justify-center text-center text-[11px] text-gray-500 px-2">Image unavailable<br/>${altText}</div>
+                </div>
+            `;
+        }
+
+        function titleCaseFromSlug(slugBase) {
+            return slugBase
+                .replace(/-\d+$/i, '')
+                .split('-')
+                .filter(Boolean)
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
+        }
+
+        function inferCategoryFromSlug(slugBase) {
+            if (/(^|-)give-way|(^|-)stop($|-)|priority|controlled-block|go-ahead/.test(slugBase)) {
+                return 'priority';
+            }
+
+            if (/turn-|keep-left|pass-on-either-side|go-straight|minimum-speed-limit|pedestrians-only|animal-riders-only|mandatory-snow-chains|roundabout-1|end-of-minimum-speed-limit/.test(slugBase)) {
+                return 'mandatory';
+            }
+
+            if (/^no-|maximum-|end-of-all-restrictions|end-of-no-overtaking|end-of-maximum-speed-limit|no-parking|no-stopping|stop-police|stop-customs|minimum-safe-following-distance-between-vehicles/.test(slugBase)) {
+                return 'prohibitory';
+            }
+
+            if (/dangerous|junction|t-junction|tunnel|roundabout$|road|traffic|pedestrian|children|animals|slippery|falling|side-winds|level-crossing|steep|hump-bridge|swing-bridge|tramway|risk-|soft-verges|uneven|low-flying|water-course/.test(slugBase)) {
+                return 'warning';
+            }
+
+            return 'information';
+        }
+
+        function purposeFromNameAndCategory(name, category) {
+            if (category === 'warning') return `Warns about ${name.toLowerCase()} ahead.`;
+            if (category === 'prohibitory') return `Indicates a prohibition or restriction: ${name.toLowerCase()}.`;
+            if (category === 'mandatory') return `Indicates a required action: ${name.toLowerCase()}.`;
+            if (category === 'priority') return `Indicates priority control: ${name.toLowerCase()}.`;
+            return `Provides road information about ${name.toLowerCase()}.`;
+        }
+
+        // ==================== ROAD SIGNS DATA ====================
+        const legacyRoadSigns = [
+            // WARNING
+            { cat: 'warning', name: "Traffic Signals", desc: "Traffic lights ahead. Be prepared to stop.", html: generateSignHTML('warning', 'fa-solid fa-traffic-light') },
+            { cat: 'warning', name: "Pedestrian Crossing", desc: "Watch out for pedestrians crossing the road.", html: generateSignHTML('warning', 'fa-solid fa-person-walking') },
+            { cat: 'warning', name: "Children", desc: "School or playground nearby. Drive slowly.", html: generateSignHTML('warning', 'fa-solid fa-children') },
+            { cat: 'warning', name: "Roadworks", desc: "Construction ahead. Slow down and expect delays.", html: generateSignHTML('warning', 'fa-solid fa-person-digging') },
+            { cat: 'warning', name: "Slippery Road", desc: "Surface may be dangerously slippery when wet.", html: generateSignHTML('warning', 'fa-solid fa-car-burst') },
+            { cat: 'warning', name: "Two-way Traffic", desc: "You are entering a road with oncoming traffic.", html: generateSignHTML('warning', 'fa-solid fa-arrows-up-down') },
+            { cat: 'warning', name: "Roundabout Ahead", desc: "Prepare to give way to traffic on the right.", html: generateSignHTML('warning', 'fa-solid fa-arrows-spin') },
+            { cat: 'warning', name: "Crossroads", desc: "Intersection ahead. Approach with caution.", html: generateSignHTML('warning', 'fa-solid fa-plus') },
+            { cat: 'warning', name: "Dangerous Bend Left", desc: "Sharp or dangerous left bend ahead.", html: generateSignHTML('warning', 'fa-solid fa-arrow-left-long') },
+            { cat: 'warning', name: "Dangerous Bend Right", desc: "Sharp or dangerous right bend ahead.", html: generateSignHTML('warning', 'fa-solid fa-arrow-right-long') },
+            { cat: 'warning', name: "Series of Bends", desc: "Multiple bends ahead. Reduce speed.", html: generateSignHTML('warning', 'fa-solid fa-wave-square') },
+            { cat: 'warning', name: "Steep Ascent", desc: "Steep uphill gradient ahead.", html: generateSignHTML('warning', 'fa-solid fa-mountain') },
+            { cat: 'warning', name: "Steep Descent", desc: "Steep downhill gradient ahead. Use low gear.", html: generateSignHTML('warning', 'fa-solid fa-mountain-sun') },
+            { cat: 'warning', name: "Narrow Road", desc: "Road narrows ahead.", html: generateSignHTML('warning', 'fa-solid fa-road') },
+            { cat: 'warning', name: "Narrow Bridge", desc: "Bridge width is limited.", html: generateSignHTML('warning', 'fa-solid fa-bridge') },
+            { cat: 'warning', name: "Level Crossing", desc: "Railway crossing ahead.", html: generateSignHTML('warning', 'fa-solid fa-train') },
+            { cat: 'warning', name: "Falling Rocks", desc: "Risk of rockfall in this area.", html: generateSignHTML('warning', 'fa-solid fa-hill-rockslide') },
+            { cat: 'warning', name: "Cattle", desc: "Animals may cross the road.", html: generateSignHTML('warning', 'fa-solid fa-cow') },
+            { cat: 'warning', name: "Cyclists", desc: "Cyclists likely in roadway.", html: generateSignHTML('warning', 'fa-solid fa-person-biking') },
+            
+            // PROHIBITORY
+            { cat: 'prohibitory', name: "No Entry", desc: "Vehicles are not allowed past this sign.", html: generateSignHTML('no-entry') },
+            { cat: 'prohibitory', name: "Speed Limit (50)", desc: "Maximum speed 50 km/h.", html: generateSignHTML('prohibitory', null, '50') },
+            { cat: 'prohibitory', name: "Speed Limit (100)", desc: "Maximum speed 100 km/h.", html: generateSignHTML('prohibitory', null, '100') },
+            { cat: 'prohibitory', name: "No U-turn", desc: "Making a U-turn is strictly forbidden.", html: generateSignHTML('prohibitory', 'fa-solid fa-arrow-rotate-left', null, true) },
+            { cat: 'prohibitory', name: "No Overtaking", desc: "Do not pass other vehicles.", html: generateSignHTML('prohibitory', 'fa-solid fa-car-side', null, true) },
+            { cat: 'prohibitory', name: "No Parking", desc: "Parking is not allowed.", html: generateSignHTML('no-parking') },
+            { cat: 'prohibitory', name: "No Stopping", desc: "Stopping and parking are forbidden.", html: generateSignHTML('no-stopping') },
+            { cat: 'prohibitory', name: "No Bicycles", desc: "Cycling is prohibited.", html: generateSignHTML('prohibitory', 'fa-solid fa-bicycle') },
+            { cat: 'prohibitory', name: "No Left Turn", desc: "Turning left is not permitted.", html: generateSignHTML('prohibitory', 'fa-solid fa-arrow-turn-up', null, true) },
+            { cat: 'prohibitory', name: "No Right Turn", desc: "Turning right is not permitted.", html: generateSignHTML('prohibitory', 'fa-solid fa-arrow-turn-down', null, true) },
+            { cat: 'prohibitory', name: "No Pedestrians", desc: "Pedestrians are prohibited.", html: generateSignHTML('prohibitory', 'fa-solid fa-person-walking', null, true) },
+            { cat: 'prohibitory', name: "No Motorcycles", desc: "Motorcycles are prohibited.", html: generateSignHTML('prohibitory', 'fa-solid fa-motorcycle') },
+            { cat: 'prohibitory', name: "No Trucks", desc: "Goods vehicles are prohibited.", html: generateSignHTML('prohibitory', 'fa-solid fa-truck') },
+            { cat: 'prohibitory', name: "Width Limit", desc: "Vehicles wider than indicated are prohibited.", html: generateSignHTML('prohibitory', null, '2.3') },
+            { cat: 'prohibitory', name: "Height Limit", desc: "Vehicles taller than indicated are prohibited.", html: generateSignHTML('prohibitory', null, '4.2') },
+            { cat: 'prohibitory', name: "Weight Limit", desc: "Vehicles over indicated weight are prohibited.", html: generateSignHTML('prohibitory', null, '7.5') },
+            { cat: 'prohibitory', name: "End of Speed Limit", desc: "End of previous speed restriction.", html: generateSignHTML('prohibitory', null, 'END', true) },
+
+            // MANDATORY
+            { cat: 'mandatory', name: "Turn Left", desc: "You must turn left ahead.", html: generateSignHTML('mandatory', 'fa-solid fa-arrow-left') },
+            { cat: 'mandatory', name: "Turn Right", desc: "You must turn right ahead.", html: generateSignHTML('mandatory', 'fa-solid fa-arrow-right') },
+            { cat: 'mandatory', name: "Go Straight", desc: "You must proceed straight ahead.", html: generateSignHTML('mandatory', 'fa-solid fa-arrow-up') },
+            { cat: 'mandatory', name: "Keep Left", desc: "Pass obstacles on the left side.", html: generateSignHTML('mandatory', 'fa-solid fa-arrow-turn-down', null, false) }, // Hacky keep left icon
+            { cat: 'mandatory', name: "Min Speed (30)", desc: "Drive at least 30 km/h.", html: generateSignHTML('mandatory', null, '30') },
+            { cat: 'mandatory', name: "Keep Right", desc: "Pass obstacles on the right side.", html: generateSignHTML('mandatory', 'fa-solid fa-arrow-turn-up') },
+            { cat: 'mandatory', name: "Pass Either Side", desc: "Pass obstruction on either side.", html: generateSignHTML('mandatory', 'fa-solid fa-code-branch') },
+            { cat: 'mandatory', name: "Roundabout Direction", desc: "Follow roundabout direction arrows.", html: generateSignHTML('mandatory', 'fa-solid fa-arrows-rotate') },
+            { cat: 'mandatory', name: "Cycle Path", desc: "Cyclists must use the designated path.", html: generateSignHTML('mandatory', 'fa-solid fa-bicycle') },
+            { cat: 'mandatory', name: "Pedestrian Path", desc: "Pedestrians must use the designated path.", html: generateSignHTML('mandatory', 'fa-solid fa-person-walking') },
+
+            // PRIORITY
+            { cat: 'priority', name: "Stop", desc: "Come to a complete stop and give way.", html: generateSignHTML('stop') },
+            { cat: 'priority', name: "Give Way", desc: "Yield to traffic on the intersecting road.", html: generateSignHTML('yield') },
+            { cat: 'priority', name: "Priority Road", desc: "You have priority at junctions.", html: generateSignHTML('priority-road') },
+            { cat: 'priority', name: "End of Priority", desc: "Your priority road status ends ahead.", html: generateSignHTML('priority-road', null, null, true) }
+        ];
+
+        const CY_SIGNS_SOURCE = 'https://cysigns.online/en/signs';
+        const CY_SIGNS_VERIFIED_AT = '2026-07-10';
+
+        function slugifyName(value) {
+            return value
+                .toLowerCase()
+                .replace(/\([^)]*\)/g, ' ')
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-+|-+$/g, '');
+        }
+
+        const sourcedSignSlugs = [
+            'airport.jpg',
+            'animal-riders-only.jpg',
+            'bus-stop.jpg',
+            'children.jpg',
+            'controlled-block.jpg',
+            'dangerous-bend.jpg',
+            'dead-end-left.jpg',
+            'dead-end-straight-ahead.jpg',
+            'default-roundabout-lane.jpg',
+            'direction-sign.jpg',
+            'directions-on-roundabout.jpg',
+            'distance-to-level-crossing.jpg',
+            'domestic-animals.jpg',
+            'double-dangerous-bend.jpg',
+            'elderly-or-disabled-pedestrians.jpg',
+            'electrified-overhead-cable.jpg',
+            'emergency-phone.jpg',
+            'end-of-all-restrictions.jpg',
+            'end-of-dual-carriageway.jpg',
+            'end-of-maximum-speed-limit.jpg',
+            'end-of-minimum-speed-limit.jpg',
+            'end-of-no-overtaking.jpg',
+            'end-of-no-parking-zone.jpg',
+            'end-of-priority-road.jpg',
+            'falling-rocks.jpg',
+            'first-aid.jpg',
+            'give-way.jpg',
+            'give-way-to-traffic-on-main-road.jpg',
+            'go-ahead.jpg',
+            'go-straight-ahead-only.jpg',
+            'go-straight-or-turn-right-ahead.jpg',
+            'highway.jpg',
+            'hump-bridge.jpg',
+            'junction-on-bend.jpg',
+            'junction-on-bend-1.jpg',
+            'junction-with-a-secondary-road.jpg',
+            'junction-with-a-secondary-road-1.jpg',
+            'junction-with-a-secondary-road-2.jpg',
+            'junction-with-priority-to-the-right.jpg',
+            'keep-left.jpg',
+            'level-crossing-with-barriers.jpg',
+            'level-crossing-without-barrier.jpg',
+            'loose-road-surface.jpg',
+            'low-flying-aircrafts.jpg',
+            'low-flying-helicopters.jpg',
+            'mandatory-snow-chains.jpg',
+            'maximum-height.jpg',
+            'maximum-speed.jpg',
+            'maximum-weight.jpg',
+            'maximum-width.jpg',
+            'minimum-safe-following-distance-between-vehicles.jpg',
+            'minimum-speed-limit.jpg',
+            'no-agricle-vehicles.jpg',
+            'no-crossing-for-pedestrians.jpg',
+            'no-cycling.jpg',
+            'no-entry.jpg',
+            'no-entry-for-mopeds.jpg',
+            'no-entry-for-motorcycles.jpg',
+            'no-heavy-goods-vehicles.jpg',
+            'no-horns.jpg',
+            'no-horse-drawn-vehicles.jpg',
+            'no-motor-vehicles.jpg',
+            'no-motor-vehicles-except-motorcycles.jpg',
+            'no-overtaking.jpg',
+            'no-overtaking-1.jpg',
+            'no-overtaking-2.jpg',
+            'no-overtaking-by-heavy-vehicles.jpg',
+            'no-parking-on-even-dates.jpg',
+            'no-parking-on-odd-dates.jpg',
+            'no-parking-or-waiting.jpg',
+            'no-parking-or-waiting-or-overtaking.jpg',
+            'no-parking-zone.jpg',
+            'no-right-turn.jpg',
+            'no-stopping.jpg',
+            'no-u-turn.jpg',
+            'no-vehicle-over-length-shown.jpg',
+            'no-vehicles.jpg',
+            'no-vehicles-carrying-dangerous-water-pollutants.jpg',
+            'no-vehicles-carrying-explosives.jpg',
+            'obstacle.jpg',
+            'obstacle-left.jpg',
+            'one-way-street.jpg',
+            'one-way-street-1.jpg',
+            'other-danger.jpg',
+            'other-entrances-or-exits-on-the-left-side.jpg',
+            'overtaking-is-allowed.jpg',
+            'overtaking-is-allowed-from-right.jpg',
+            'parking.jpg',
+            'pass-on-either-side.jpg',
+            'pedal-cycle-route-crossing-the-road.jpg',
+            'pedestrian-crossing.jpg',
+            'pedestrian-crossing-1.jpg',
+            'pedestrians.jpg',
+            'pedestrians-only.jpg',
+            'petrol-station.jpg',
+            'priority-road.jpg',
+            'priority-to-traffic-from-opposite-direction.jpg',
+            'priority-to-traffic-from-your-direction.jpg',
+            'proceed-to-traffic-approaching-from-the-behind.jpg',
+            'proceed-to-traffic-approaching-from-the-front.jpg',
+            'proceed-to-traffic-approaching-from-the-side.jpg',
+            'recommended-speed.jpg',
+            'residential-area.jpg',
+            'risk-of-grounding.jpg',
+            'risk-of-ice.jpg',
+            'road-hump.jpg',
+            'road-narrows-on-both-sides.jpg',
+            'road-narrows-on-one-side.jpg',
+            'roadworks.jpg',
+            'roundabout.jpg',
+            'roundabout-1.jpg',
+            'side-line-of-carriageway-no-parking.jpg',
+            'side-line-of-carriageway-no-parking-1.jpg',
+            'side-line-of-carriageway-no-parking-or-stopping.jpg',
+            'side-winds.jpg',
+            'slippery-road.jpg',
+            'slow-moving-vehicles-on-hill-ahead.jpg',
+            'soft-verges-ahead.jpg',
+            'steep-ascent.jpg',
+            'steep-descent.jpg',
+            'stop.jpg',
+            'stop-and-give-way.jpg',
+            'stop-customs.jpg',
+            'stop-for-all-traffic.jpg',
+            'stop-for-traffic-approaching-from-both-front-and-behind.jpg',
+            'stop-for-traffic-approaching-from-the-behind.jpg',
+            'stop-for-traffic-approaching-from-the-front.jpg',
+            'stop-police.jpg',
+            'swing-bridge.jpg',
+            'taxi-parking.jpg',
+            'temporary-sharp-deviation.jpg',
+            't-junction.jpg',
+            'traffic-merges-onto-main-carriageway.jpg',
+            'traffic-queues.jpg',
+            'traffic-signals.jpg',
+            'tramway.jpg',
+            'tunnel.jpg',
+            'turn-left-ahead.jpg',
+            'turn-left-or-right-ahead.jpg',
+            'turn-right.jpg',
+            'two-way-traffic.jpg',
+            'two-way-traffic-crosses-one-way-road.jpg',
+            'uneven-road.jpg',
+            'water-course-alongside-road.jpg',
+            'wild-animals.jpg'
+        ];
+
+        const signNameAliases = {
+            'roundabout-ahead': 'roundabout',
+            'crossroads': 'junction-with-a-secondary-road',
+            'dangerous-bend-left': 'dangerous-bend',
+            'dangerous-bend-right': 'dangerous-bend',
+            'series-of-bends': 'double-dangerous-bend',
+            'narrow-road': 'road-narrows-on-both-sides',
+            'level-crossing': 'level-crossing-without-barrier',
+            'cattle': 'domestic-animals',
+            'cyclists': 'pedal-cycle-route-crossing-the-road',
+            'go-straight': 'go-straight-ahead-only',
+            'turn-left': 'turn-left-ahead',
+            'pass-either-side': 'pass-on-either-side',
+            'roundabout-direction': 'roundabout',
+            'pedestrian-path': 'pedestrians-only',
+            'end-of-priority': 'end-of-priority-road',
+            'no-bicycles': 'no-cycling',
+            'no-pedestrians': 'no-crossing-for-pedestrians',
+            'no-trucks': 'no-heavy-goods-vehicles',
+            'speed-limit-50': 'maximum-speed',
+            'speed-limit-100': 'maximum-speed',
+            'end-of-speed-limit': 'end-of-maximum-speed-limit',
+            'no-parking': 'no-parking-or-waiting'
+        };
+
+        const officialCatalogFlat = sourcedSignSlugs.map((slug, idx) => {
+            const nameFromSlug = slug
+                .replace(/\.jpg$/i, '')
+                .replace(/-\d+$/i, '')
+                .replace(/-/g, ' ')
+                .replace(/\s+/g, ' ')
+                .trim();
+
+            return {
+                code: `CY-SRC-${String(idx + 1).padStart(3, '0')}`,
+                name: nameFromSlug,
+                slug: slug.replace(/\.jpg$/i, ''),
+                imageUrl: `https://cyprus-road-signs.s3.eu-central-1.amazonaws.com/signs/${slug}`,
+                sourceUrl: CY_SIGNS_SOURCE,
+                status: 'reference'
+            };
+        });
+        const officialCatalogBySlug = new Map(officialCatalogFlat.map(item => [item.slug, item]));
+
+        const roadSigns = officialCatalogFlat.map((entry, idx) => {
+            const prettyName = titleCaseFromSlug(entry.slug);
+            const cat = inferCategoryFromSlug(entry.slug);
+
+            return {
+                cat,
+                name: prettyName,
+                desc: purposeFromNameAndCategory(prettyName, cat),
+                html: generateImageSignHTML(entry.imageUrl, prettyName),
+                localCode: `APP-SRC-${String(idx + 1).padStart(3, '0')}`,
+                officialCode: entry.code,
+                catalogSlug: entry.slug,
+                source: {
+                    name: 'CySigns online catalog',
+                    url: CY_SIGNS_SOURCE,
+                    verifiedAt: CY_SIGNS_VERIFIED_AT,
+                    status: 'mapped'
+                }
+            };
+        });
+
+        let activeSignFilter = 'all';
+        let signSearchQuery = '';
+
+        function getCatalogCoverage() {
+            const mappedSlugs = new Set(
+                roadSigns
+                    .filter(sign => sign.source && sign.source.status === 'mapped')
+                    .map(sign => sign.catalogSlug)
+            );
+
+            const missingEntries = officialCatalogFlat.filter(entry => !mappedSlugs.has(entry.slug));
+            return {
+                totalOfficial: officialCatalogFlat.length,
+                covered: officialCatalogFlat.length - missingEntries.length,
+                missing: missingEntries.length,
+                missingEntries
+            };
+        }
+
+        function renderCatalogCoverage() {
+            const coverage = getCatalogCoverage();
+            const summary = document.getElementById('catalog-sync-summary');
+            const list = document.getElementById('catalog-missing-list');
+
+            summary.innerText = `Official references: ${coverage.covered}/${coverage.totalOfficial} mapped | Missing: ${coverage.missing} | Source verified: ${CY_SIGNS_VERIFIED_AT}`;
+            list.innerHTML = '';
+
+            if (!coverage.missingEntries.length) {
+                list.innerHTML = '<span class="text-xs px-2.5 py-1 rounded-full bg-green-100 text-green-800 font-semibold">No missing signs in current reference set</span>';
+                return;
+            }
+
+            coverage.missingEntries.slice(0, 18).forEach(entry => {
+                const chip = document.createElement('button');
+                chip.className = 'text-xs px-2.5 py-1 rounded-full bg-white border border-amber-300 text-amber-900 hover:bg-amber-100';
+                chip.innerText = `${entry.code} - ${entry.name}`;
+                chip.onclick = () => searchSigns(entry.name);
+                list.appendChild(chip);
+            });
+        }
+
+        function showMissingOnly() {
+            const coverage = getCatalogCoverage();
+            if (!coverage.missingEntries.length) {
+                searchSigns('');
+                return;
+            }
+            const firstMissing = coverage.missingEntries[0];
+            const searchInput = document.getElementById('signs-search');
+            searchInput.value = firstMissing.name;
+            searchSigns(firstMissing.name);
+        }
+
+        function renderFlashcards() {
+            const grid = document.getElementById('flashcards-grid');
+            grid.innerHTML = '';
+
+            const filteredByCategory = activeSignFilter === 'all'
+                ? roadSigns
+                : roadSigns.filter(s => s.cat === activeSignFilter);
+
+            const filteredSigns = filteredByCategory.filter(sign => {
+                if (!signSearchQuery) return true;
+                const haystack = `${sign.name} ${sign.desc} ${sign.cat} ${sign.officialCode} ${sign.localCode}`.toLowerCase();
+                return haystack.includes(signSearchQuery);
+            });
+
+            const countLabel = document.getElementById('signs-count');
+            countLabel.innerText = `Showing ${filteredSigns.length} of ${roadSigns.length} signs | Mapped to official catalog: ${roadSigns.filter(s => s.source.status === 'mapped').length}`;
+
+            if (!filteredSigns.length) {
+                grid.innerHTML = `
+                    <div class="col-span-full bg-white border border-gray-200 rounded-xl p-6 text-center text-gray-600">
+                        No signs match your current filter/search. Try a different keyword.
+                    </div>
+                `;
+                return;
+            }
+
+            filteredSigns.forEach(sign => {
+                const card = document.createElement('div');
+                // The onclick toggles the rotation class on the inner 'flipper' div
+                card.className = 'group h-48 sm:h-56 w-full perspective-1000 cursor-pointer';
+                card.innerHTML = `
+                    <div class="flipper relative w-full h-full transition-transform duration-500 transform-style-preserve-3d shadow-sm hover:shadow-md rounded-xl">
+                        <!-- FRONT OF CARD -->
+                        <div class="absolute w-full h-full backface-hidden bg-white rounded-xl flex items-center justify-center border border-gray-200 p-2 sm:p-4">
+                            ${sign.html}
+                        </div>
+                        <!-- BACK OF CARD -->
+                        <div class="absolute w-full h-full backface-hidden bg-blue-50 rounded-xl flex flex-col items-center justify-center rotate-y-180 border border-blue-200 p-4 text-center">
+                            <h3 class="font-bold text-gray-800 text-sm sm:text-base mb-2 leading-tight">${sign.name}</h3>
+                            <p class="text-xs sm:text-sm text-gray-600">${sign.desc}</p>
+                            <span class="mt-auto text-[10px] uppercase font-bold text-blue-400 tracking-wider">${sign.cat}</span>
+                        </div>
+                    </div>
+                `;
+                card.onclick = function() {
+                    this.querySelector('.flipper').classList.toggle('rotate-y-180');
+                };
+                grid.appendChild(card);
+            });
+        }
+
+        // Filter button logic
+        function filterSigns(type) {
+            activeSignFilter = type;
+            // Update button styles
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                if(btn.dataset.filter === type) {
+                    btn.classList.replace('bg-white', 'bg-blue-600');
+                    btn.classList.replace('text-gray-700', 'text-white');
+                    btn.classList.replace('border-gray-300', 'border-transparent');
+                } else {
+                    btn.classList.replace('bg-blue-600', 'bg-white');
+                    btn.classList.replace('text-white', 'text-gray-700');
+                    btn.classList.replace('border-transparent', 'border-gray-300');
+                }
+            });
+            renderFlashcards();
+        }
+
+        function searchSigns(query) {
+            signSearchQuery = query.trim().toLowerCase();
+            renderFlashcards();
+        }
+
+        function reviewSign(signName) {
+            const reviewSignAliases = {
+                'Roundabout Ahead': 'Roundabout',
+                'Speed Limit (100)': 'Maximum Speed',
+                'Speed Limit (50)': 'Maximum Speed',
+                'Min Speed (30)': 'Minimum Speed Limit',
+                'No Parking': 'No Parking Or Waiting',
+                'Turn Left': 'Turn Left Ahead',
+                'Pedestrian Crossing': 'Pedestrian Crossing'
+            };
+
+            const resolvedSignName = reviewSignAliases[signName] || signName;
+
+            switchTab('signs');
+            activeSignFilter = 'all';
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                if(btn.dataset.filter === 'all') {
+                    btn.classList.replace('bg-white', 'bg-blue-600');
+                    btn.classList.replace('text-gray-700', 'text-white');
+                    btn.classList.replace('border-gray-300', 'border-transparent');
+                } else {
+                    btn.classList.replace('bg-blue-600', 'bg-white');
+                    btn.classList.replace('text-white', 'text-gray-700');
+                    btn.classList.replace('border-transparent', 'border-gray-300');
+                }
+            });
+
+            const searchInput = document.getElementById('signs-search');
+            searchInput.value = resolvedSignName;
+            signSearchQuery = resolvedSignName.toLowerCase();
+            renderFlashcards();
+        }
+
+
+        // ==================== QUIZ LOGIC ====================
+        const quizQuestions = [
+            {
+                q: "Which side of the road must you drive on in Cyprus?",
+                options: ["Right side", "Left side", "Center on rural roads", "It varies by district"],
+                ans: 1,
+                exp: "Cyprus drives on the left-hand side of the road, a legacy of British administration."
+            },
+            {
+                q: "At a roundabout, who has priority?",
+                options: ["Traffic approaching from the left", "The vehicle that arrives first", "Traffic approaching from the right", "Larger vehicles"],
+                ans: 2,
+                exp: "Since you approach clockwise (driving on the left), you must give way to traffic approaching from your right that is already on the roundabout."
+            },
+            {
+                q: "Is it legal to drink water from a bottle while driving?",
+                options: ["Yes, staying hydrated is essential", "Only at traffic lights", "No, eating and drinking while driving is illegal", "Only if it has a sports cap"],
+                ans: 2,
+                exp: "Cyprus has very strict laws against distractions. Eating or drinking anything (even water) while driving is an offense."
+            },
+            {
+                q: "What is the standard speed limit in built-up (urban) areas?",
+                options: ["30 km/h", "50 km/h", "65 km/h", "80 km/h"],
+                ans: 1,
+                exp: "Unless signs indicate otherwise, the limit in towns and residential areas is 50 km/h."
+            },
+            {
+                q: "What do double yellow lines at the edge of the road mean?",
+                options: ["Loading/unloading only", "Parking for 30 mins max", "Parking and waiting are strictly prohibited", "Resident parking only"],
+                ans: 2,
+                exp: "Double yellow lines mean no parking and no waiting at any time."
+            },
+            {
+                q: "You arrive at an intersection where traffic lights are broken. Who has priority?",
+                options: ["Traffic going straight", "Traffic from the left", "Traffic from the right", "You do, if you flash your lights"],
+                ans: 2,
+                exp: "At an uncontrolled intersection, you must give way to vehicles approaching from the right."
+            },
+            {
+                q: "What is the minimum speed limit on a motorway in Cyprus?",
+                options: ["50 km/h", "65 km/h", "80 km/h", "There is no minimum"],
+                ans: 1,
+                exp: "To ensure safety and traffic flow, the minimum speed on a motorway is 65 km/h (the maximum is 100 km/h)."
+            },
+            {
+                q: "When can you use your car horn in built-up areas?",
+                options: ["To greet someone", "To warn others of danger", "If someone is driving too slowly", "Between 10 PM and 6 AM"],
+                ans: 1,
+                exp: "Horns should only be used to warn other road users of imminent danger, never out of frustration or as a greeting."
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let quizAnswered = false;
+
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            document.getElementById('quiz-results').classList.add('hidden');
+            document.getElementById('quiz-content').classList.remove('hidden');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            quizAnswered = false;
+            const q = quizQuestions[currentQuestionIndex];
+            
+            // UI Updates
+            document.getElementById('quiz-progress').innerText = `Question ${currentQuestionIndex + 1}/${quizQuestions.length}`;
+            document.getElementById('quiz-progress-bar').style.width = `${((currentQuestionIndex + 1) / quizQuestions.length) * 100}%`;
+            document.getElementById('question-text').innerText = q.q;
+            document.getElementById('next-btn').classList.add('hidden');
+            document.getElementById('feedback-area').classList.add('hidden');
+
+            // Render Options
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'w-full text-left p-4 rounded-xl border border-gray-200 bg-white hover:bg-blue-50 hover:border-blue-300 transition-all text-gray-700 font-medium font-medium shadow-sm';
+                btn.innerText = opt;
+                btn.onclick = () => selectAnswer(index, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function selectAnswer(selectedIndex, btnElement) {
+            if (quizAnswered) return; // Prevent changing answer
+            quizAnswered = true;
+
+            const q = quizQuestions[currentQuestionIndex];
+            const isCorrect = selectedIndex === q.ans;
+            const buttons = document.getElementById('options-container').children;
+
+            // Style all buttons
+            for (let i = 0; i < buttons.length; i++) {
+                buttons[i].disabled = true;
+                buttons[i].classList.remove('hover:bg-blue-50', 'hover:border-blue-300', 'cursor-pointer');
+                
+                if (i === q.ans) {
+                    // Correct answer (Highlight Green)
+                    buttons[i].classList.add('bg-green-100', 'border-green-500', 'text-green-800');
+                } else if (i === selectedIndex && !isCorrect) {
+                    // Wrong answer selected (Highlight Red)
+                    buttons[i].classList.add('bg-red-100', 'border-red-500', 'text-red-800');
+                } else {
+                    // Other options fade out
+                    buttons[i].classList.add('opacity-50', 'bg-gray-50');
+                }
+            }
+
+            // Show Feedback
+            const feedbackArea = document.getElementById('feedback-area');
+            const feedbackIcon = document.getElementById('feedback-icon');
+            const feedbackTitle = document.getElementById('feedback-title');
+            
+            feedbackArea.classList.remove('hidden', 'bg-green-50', 'border-green-200', 'bg-red-50', 'border-red-200');
+            
+            if (isCorrect) {
+                score++;
+                feedbackArea.classList.add('bg-green-50', 'border-green-200');
+                feedbackIcon.innerHTML = '<i class="fa-solid fa-circle-check text-green-500 text-xl"></i>';
+                feedbackTitle.innerText = 'Correct!';
+                feedbackTitle.className = 'font-bold text-lg mb-1 text-green-800';
+            } else {
+                feedbackArea.classList.add('bg-red-50', 'border-red-200');
+                feedbackIcon.innerHTML = '<i class="fa-solid fa-circle-xmark text-red-500 text-xl"></i>';
+                feedbackTitle.innerText = 'Incorrect';
+                feedbackTitle.className = 'font-bold text-lg mb-1 text-red-800';
+            }
+            
+            document.getElementById('feedback-text').innerText = q.exp;
+            
+            // Show Next button
+            const nextBtn = document.getElementById('next-btn');
+            nextBtn.classList.remove('hidden');
+            if(currentQuestionIndex === quizQuestions.length - 1) {
+                nextBtn.innerHTML = 'See Results <i class="fa-solid fa-flag-checkered ml-2"></i>';
+            } else {
+                nextBtn.innerHTML = 'Next Question <i class="fa-solid fa-arrow-right ml-2"></i>';
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizQuestions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quiz-content').classList.add('hidden');
+            const resultsDiv = document.getElementById('quiz-results');
+            resultsDiv.classList.remove('hidden');
+            
+            document.getElementById('final-score').innerText = score;
+            document.getElementById('total-questions').innerText = quizQuestions.length;
+            
+            // Optional: Change icon based on score
+            const icon = resultsDiv.querySelector('i');
+            if(score === quizQuestions.length) {
+                icon.className = 'fa-solid fa-crown text-5xl text-yellow-500';
+            } else if (score > quizQuestions.length / 2) {
+                icon.className = 'fa-solid fa-thumbs-up text-5xl text-blue-500';
+            } else {
+                icon.className = 'fa-solid fa-book-open text-5xl text-gray-500';
+            }
+        }
+
+        // ==================== SCENARIO MODE ====================
+        function shuffleArray(input) {
+            const arr = [...input];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function pickWrongOptions(options, count, seed) {
+            const pool = [...options];
+            const picked = [];
+            let cursor = seed;
+            while (picked.length < count && pool.length) {
+                const idx = cursor % pool.length;
+                picked.push(pool.splice(idx, 1)[0]);
+                cursor += 2;
+            }
+            return picked;
+        }
+
+        const scenarioTopicBank = {
+            'roundabout': {
+                ruleRef: 'Cyprus roundabout priority rules',
+                explanation: 'Traffic already on the roundabout has priority; give way to circulating traffic approaching from your right.',
+                correctAction: 'Give way to traffic already on the roundabout, then enter when safe.',
+                wrongActions: ['Enter first because you are near the entry line.', 'Flash headlights and proceed to claim priority.', 'Stop in-lane and only watch for vehicles from your left.'],
+                prompts: {
+                    easy: ['At a roundabout approach in Nicosia, a vehicle is already circulating from your right.'],
+                    medium: ['At a busy two-lane roundabout, you intend to continue straight while another car is already circulating.'],
+                    hard: ['In wet conditions at a multilane roundabout, a circulating driver from your right is signaling late.']
+                }
+            },
+            'motorway': {
+                ruleRef: 'Motorway min/max speed limits in Cyprus',
+                explanation: 'Motorways generally require legal speed compliance including minimum flow speed when conditions allow.',
+                correctAction: 'Adjust speed to remain within motorway legal limits and traffic conditions.',
+                wrongActions: ['Continue well below motorway minimum without cause.', 'Drive on the shoulder to let others pass.', 'Use hazard lights and keep the same unsafe speed.'],
+                prompts: {
+                    easy: ['You join a motorway in clear weather with light traffic.'],
+                    medium: ['You are cruising on a motorway while traffic behind begins bunching up.'],
+                    hard: ['On a motorway descent with changing weather, you notice your speed drifting outside legal range.']
+                }
+            },
+            'distractions': {
+                ruleRef: 'Driver distraction enforcement in Cyprus',
+                explanation: 'Drivers must avoid distraction and maintain full control of the vehicle.',
+                correctAction: 'Keep full control and stop safely before eating, drinking, or handling items.',
+                wrongActions: ['Take a quick drink while moving slowly.', 'Handle food only at red lights without parking.', 'Use one hand for tasks and one on the wheel.'],
+                prompts: {
+                    easy: ['In city traffic, you feel tempted to drink water while driving.'],
+                    medium: ['During a delivery route, you are tempted to eat while moving between junctions.'],
+                    hard: ['In heavy congestion, you try to multitask with food and lane positioning.']
+                }
+            },
+            'junction-priority': {
+                ruleRef: 'Uncontrolled junction right-priority rule',
+                explanation: 'At uncontrolled junctions, give way to vehicles approaching from your right unless signs indicate otherwise.',
+                correctAction: 'Yield to vehicles from the right when approaching an uncontrolled junction.',
+                wrongActions: ['Proceed first because you are moving straight.', 'Proceed first because your road feels wider.', 'Use horn and continue to force right of way.'],
+                prompts: {
+                    easy: ['You approach an uncontrolled intersection and a car arrives from your right.'],
+                    medium: ['Visibility is partial at an unsigned junction; a vehicle appears from your right.'],
+                    hard: ['At dusk with moderate traffic, an uncontrolled junction has simultaneous arrivals from multiple directions.']
+                }
+            },
+            'parking-lines': {
+                ruleRef: 'Road markings: yellow line restrictions',
+                explanation: 'Road edge markings indicate strict parking/waiting restrictions in many locations.',
+                correctAction: 'Find a legal parking space instead of stopping in restricted marked zones.',
+                wrongActions: ['Stop briefly with hazard lights in a restricted zone.', 'Wait if a passenger remains in the car.', 'Park outside peak hours regardless of markings.'],
+                prompts: {
+                    easy: ['You need to stop near shops where restrictive curb markings are present.'],
+                    medium: ['You are late and the nearest available curb has clear restriction markings.'],
+                    hard: ['Traffic enforcement is active and you consider stopping in a marked no-waiting section.']
+                }
+            },
+            'left-driving': {
+                ruleRef: 'Left-side driving rule in Cyprus',
+                explanation: 'Cyprus traffic keeps left except where markings or signs direct otherwise.',
+                correctAction: 'Maintain lane position on the left side after turns and lane changes.',
+                wrongActions: ['Move to the right side after turning.', 'Drive centered until next sign appears.', 'Mirror the side chosen by the car in front.'],
+                prompts: {
+                    easy: ['After turning at a junction, you enter a new road.'],
+                    medium: ['You exit a roundabout into a two-way road and must position correctly.'],
+                    hard: ['At night on unfamiliar roads, you complete successive turns and need correct lane discipline.']
+                }
+            },
+            'mobile-phone': {
+                ruleRef: 'Handheld mobile phone prohibition',
+                explanation: 'Using handheld mobile devices while driving is prohibited and unsafe.',
+                correctAction: 'Ignore calls/messages until you can stop safely in a legal place.',
+                wrongActions: ['Answer quickly while holding the phone low.', 'Reply by text while moving slowly.', 'Answer while reducing speed in-lane.'],
+                prompts: {
+                    easy: ['Your phone rings while you are driving with no hands-free system.'],
+                    medium: ['A navigation alert arrives and you consider interacting with your phone manually.'],
+                    hard: ['In dense traffic you receive urgent messages and feel pressured to respond immediately.']
+                }
+            },
+            'speed-urban': {
+                ruleRef: 'Built-up area standard speed limit',
+                explanation: 'Built-up area speeds must follow posted limits and default urban limits where applicable.',
+                correctAction: 'Reduce speed to the legal urban limit unless signage indicates otherwise.',
+                wrongActions: ['Maintain current speed because the road is clear.', 'Stay above 60 km/h to match traffic flow.', 'Speed up between junctions and brake late.'],
+                prompts: {
+                    easy: ['You are driving in a built-up area with no exception signs visible.'],
+                    medium: ['Urban road conditions are clear, but your speed is above normal town limits.'],
+                    hard: ['You transition from suburban to dense urban streets and must reassess legal speed immediately.']
+                }
+            },
+            'seatbelts-children': {
+                ruleRef: 'Child restraint and passenger safety requirements',
+                explanation: 'Children and all passengers must be carried according to restraint and seatbelt rules.',
+                correctAction: 'Do not start the trip until required child restraints and seatbelts are correctly used.',
+                wrongActions: ['Use an adult seatbelt for a young child for short trips.', 'Hold a child on an adult passenger lap.', 'Drive only on local roads without proper restraints.'],
+                prompts: {
+                    easy: ['Before departure, a child passenger lacks the proper restraint setup.'],
+                    medium: ['A parent asks for a short exception because the destination is close.'],
+                    hard: ['Multiple child passengers have mismatched restraint setups and you are under time pressure.']
+                }
+            },
+            'alcohol': {
+                ruleRef: 'Lower alcohol threshold for novice drivers',
+                explanation: 'Alcohol limits are strict, and novice drivers have a lower legal threshold.',
+                correctAction: 'Do not drive after drinking; use a safe alternative.',
+                wrongActions: ['Drive carefully and avoid motorways only.', 'Drink coffee and then drive.', 'Drive only in daylight to reduce risk.'],
+                prompts: {
+                    easy: ['A novice driver has consumed alcohol and plans a short journey.'],
+                    medium: ['After social drinks, a novice driver says they feel fine to drive.'],
+                    hard: ['At night after an event, a novice driver underestimates impairment and legal exposure.']
+                }
+            }
+        };
+
+        const scenarioSettingPool = {
+            easy: ['During a daytime city drive,', 'On a routine weekday commute,', 'While heading to a nearby service,'],
+            medium: ['In moderate traffic near a junction cluster,', 'During peak-hour flow with frequent lane changes,', 'On an unfamiliar route through mixed urban roads,'],
+            hard: ['In poor visibility and dense traffic,', 'At night with fast-changing road conditions,', 'Under time pressure with multiple hazards appearing,']
+        };
+
+        function generateScenariosByDifficulty(difficulty, count) {
+            const topics = Object.keys(scenarioTopicBank);
+            const generated = [];
+
+            for (let i = 0; i < count; i++) {
+                const topicKey = topics[i % topics.length];
+                const topic = scenarioTopicBank[topicKey];
+                const setting = scenarioSettingPool[difficulty][Math.floor(i / topics.length) % scenarioSettingPool[difficulty].length];
+                const prompt = topic.prompts[difficulty][Math.floor(i / (topics.length * scenarioSettingPool[difficulty].length)) % topic.prompts[difficulty].length];
+                const situation = `${setting} ${prompt}`;
+
+                const wrongs = pickWrongOptions(topic.wrongActions, 3, i + difficulty.length);
+                const options = shuffleArray([topic.correctAction, ...wrongs]);
+                const answer = options.findIndex(opt => opt === topic.correctAction);
+
+                generated.push({
+                    topic: topicKey,
+                    difficulty,
+                    situation,
+                    options,
+                    answer,
+                    explanation: topic.explanation,
+                    ruleRef: topic.ruleRef
+                });
+            }
+
+            return generated;
+        }
+
+        const scenarios = [
+            ...generateScenariosByDifficulty('easy', 34),
+            ...generateScenariosByDifficulty('medium', 33),
+            ...generateScenariosByDifficulty('hard', 33)
+        ];
+
+        const scenarioSignMap = {
+            'roundabout': ['Roundabout', 'Give Way', 'Priority Road'],
+            'distractions': ['No Stopping'],
+            'motorway': ['Maximum Speed', 'Minimum Speed Limit'],
+            'junction-priority': ['Give Way', 'Stop', 'Priority Road'],
+            'parking-lines': ['No Parking Or Waiting', 'No Stopping'],
+            'left-driving': ['Keep Left', 'Turn Left Ahead', 'Turn Right'],
+            'seatbelts-children': ['Children', 'Pedestrian Crossing'],
+            'mobile-phone': ['No Entry'],
+            'speed-urban': ['Maximum Speed'],
+            'alcohol': ['Stop']
+        };
+
+        let currentScenarioIndex = 0;
+        let scenarioScore = 0;
+        let scenarioAnswered = false;
+        let scenarioWeakTopics = {};
+        let activeScenarios = scenarios;
+        let selectedScenarioMode = 'full';
+        const scenarioStorageKey = 'cyprusLearnerScenarioStatsV1';
+
+        function setScenarioMode(mode) {
+            selectedScenarioMode = mode;
+
+            const buttonMap = {
+                full: 'scenario-mode-all',
+                easy: 'scenario-mode-easy',
+                medium: 'scenario-mode-medium',
+                hard: 'scenario-mode-hard'
+            };
+
+            Object.values(buttonMap).forEach(id => {
+                const btn = document.getElementById(id);
+                if (!btn) return;
+                btn.classList.remove('bg-indigo-600', 'text-white');
+                btn.classList.add('bg-white', 'border', 'border-gray-300', 'text-gray-700');
+            });
+
+            const activeBtn = document.getElementById(buttonMap[mode]);
+            if (activeBtn) {
+                activeBtn.classList.remove('bg-white', 'border', 'border-gray-300', 'text-gray-700');
+                activeBtn.classList.add('bg-indigo-600', 'text-white');
+            }
+
+            startScenarios(mode);
+        }
+
+        function getScenarioStats() {
+            try {
+                const raw = localStorage.getItem(scenarioStorageKey);
+                if (!raw) {
+                    return { attempts: 0, bestScore: 0, weakTopics: {} };
+                }
+                const parsed = JSON.parse(raw);
+                return {
+                    attempts: parsed.attempts || 0,
+                    bestScore: parsed.bestScore || 0,
+                    weakTopics: parsed.weakTopics || {}
+                };
+            } catch (error) {
+                return { attempts: 0, bestScore: 0, weakTopics: {} };
+            }
+        }
+
+        function saveScenarioStats(sessionScore, weakTopicsForSession) {
+            const current = getScenarioStats();
+            const mergedWeakTopics = { ...current.weakTopics };
+
+            Object.keys(weakTopicsForSession).forEach(topic => {
+                mergedWeakTopics[topic] = (mergedWeakTopics[topic] || 0) + weakTopicsForSession[topic];
+            });
+
+            const updated = {
+                attempts: current.attempts + 1,
+                bestScore: Math.max(current.bestScore, sessionScore),
+                lastScore: sessionScore,
+                weakTopics: mergedWeakTopics,
+                lastPlayedAt: new Date().toISOString()
+            };
+
+            localStorage.setItem(scenarioStorageKey, JSON.stringify(updated));
+            return updated;
+        }
+
+        function startScenarios(mode = selectedScenarioMode, customSet = null) {
+            if (mode === 'drill' && customSet && customSet.length) {
+                activeScenarios = shuffleArray(customSet);
+            } else if (mode === 'easy' || mode === 'medium' || mode === 'hard') {
+                const byMode = scenarios.filter(item => item.difficulty === mode);
+                activeScenarios = shuffleArray(byMode);
+            } else {
+                activeScenarios = shuffleArray(scenarios);
+            }
+
+            if (!activeScenarios.length) {
+                activeScenarios = shuffleArray(scenarios);
+            }
+
+            currentScenarioIndex = 0;
+            scenarioScore = 0;
+            scenarioWeakTopics = {};
+            document.getElementById('scenario-results').classList.add('hidden');
+            document.getElementById('scenario-content').classList.remove('hidden');
+            loadScenario();
+        }
+
+        function startWeakTopicDrill() {
+            const stats = getScenarioStats();
+            const topWeakTopics = Object.entries(stats.weakTopics)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 3)
+                .map(entry => entry[0]);
+
+            const drillSet = scenarios.filter(item => topWeakTopics.includes(item.topic));
+            startScenarios('drill', drillSet.length ? drillSet : scenarios.slice(0, 5));
+        }
+
+        function loadScenario() {
+            scenarioAnswered = false;
+            const scenario = activeScenarios[currentScenarioIndex];
+
+            document.getElementById('scenario-progress').innerText = `Scenario ${currentScenarioIndex + 1}/${activeScenarios.length}`;
+            document.getElementById('scenario-progress-bar').style.width = `${((currentScenarioIndex + 1) / activeScenarios.length) * 100}%`;
+            document.getElementById('scenario-topic').innerText = scenario.topic.replace('-', ' ');
+            document.getElementById('scenario-difficulty').innerText = scenario.difficulty;
+            document.getElementById('scenario-text').innerText = scenario.situation;
+
+            document.getElementById('scenario-next-btn').classList.add('hidden');
+            document.getElementById('scenario-feedback').classList.add('hidden');
+
+            const scenarioOptions = document.getElementById('scenario-options');
+            scenarioOptions.innerHTML = '';
+
+            scenario.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'w-full text-left p-4 rounded-xl border border-gray-200 bg-white hover:bg-indigo-50 hover:border-indigo-300 transition-all text-gray-700 font-medium shadow-sm';
+                btn.innerText = opt;
+                btn.onclick = () => selectScenarioAnswer(index);
+                scenarioOptions.appendChild(btn);
+            });
+        }
+
+        function selectScenarioAnswer(selectedIndex) {
+            if (scenarioAnswered) return;
+            scenarioAnswered = true;
+
+            const scenario = activeScenarios[currentScenarioIndex];
+            const isCorrect = selectedIndex === scenario.answer;
+            const buttons = document.getElementById('scenario-options').children;
+
+            for (let i = 0; i < buttons.length; i++) {
+                buttons[i].disabled = true;
+                buttons[i].classList.remove('hover:bg-indigo-50', 'hover:border-indigo-300', 'cursor-pointer');
+
+                if (i === scenario.answer) {
+                    buttons[i].classList.add('bg-green-100', 'border-green-500', 'text-green-800');
+                } else if (i === selectedIndex && !isCorrect) {
+                    buttons[i].classList.add('bg-red-100', 'border-red-500', 'text-red-800');
+                } else {
+                    buttons[i].classList.add('opacity-50', 'bg-gray-50');
+                }
+            }
+
+            if (isCorrect) {
+                scenarioScore++;
+            } else {
+                scenarioWeakTopics[scenario.topic] = (scenarioWeakTopics[scenario.topic] || 0) + 1;
+            }
+
+            const feedbackBox = document.getElementById('scenario-feedback');
+            const feedbackIcon = document.getElementById('scenario-feedback-icon');
+            const feedbackTitle = document.getElementById('scenario-feedback-title');
+
+            feedbackBox.classList.remove('hidden', 'bg-green-50', 'border-green-200', 'bg-red-50', 'border-red-200');
+
+            if (isCorrect) {
+                feedbackBox.classList.add('bg-green-50', 'border-green-200');
+                feedbackIcon.innerHTML = '<i class="fa-solid fa-circle-check text-green-500 text-xl"></i>';
+                feedbackTitle.innerText = 'Good judgment';
+                feedbackTitle.className = 'font-bold text-lg mb-1 text-green-800';
+            } else {
+                feedbackBox.classList.add('bg-red-50', 'border-red-200');
+                feedbackIcon.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-red-500 text-xl"></i>';
+                feedbackTitle.innerText = 'Risky choice';
+                feedbackTitle.className = 'font-bold text-lg mb-1 text-red-800';
+            }
+
+            document.getElementById('scenario-feedback-text').innerText = scenario.explanation;
+            document.getElementById('scenario-feedback-rule').innerText = `Rule focus: ${scenario.ruleRef}`;
+
+            const relatedSigns = scenarioSignMap[scenario.topic] || [];
+            const relatedSignsContainer = document.getElementById('scenario-related-signs');
+            relatedSignsContainer.innerHTML = '';
+
+            relatedSigns.forEach(signName => {
+                const chip = document.createElement('button');
+                chip.className = 'px-2.5 py-1 rounded-full border border-indigo-300 bg-indigo-50 text-indigo-700 text-xs font-semibold hover:bg-indigo-100';
+                chip.innerText = `Review: ${signName}`;
+                chip.onclick = () => reviewSign(signName);
+                relatedSignsContainer.appendChild(chip);
+            });
+
+            const nextBtn = document.getElementById('scenario-next-btn');
+            nextBtn.classList.remove('hidden');
+            if (currentScenarioIndex === activeScenarios.length - 1) {
+                nextBtn.innerHTML = 'See Session Results <i class="fa-solid fa-flag-checkered ml-2"></i>';
+            } else {
+                nextBtn.innerHTML = 'Next Scenario <i class="fa-solid fa-arrow-right ml-2"></i>';
+            }
+        }
+
+        function nextScenario() {
+            currentScenarioIndex++;
+            if (currentScenarioIndex < activeScenarios.length) {
+                loadScenario();
+            } else {
+                showScenarioResults();
+            }
+        }
+
+        function showScenarioResults() {
+            document.getElementById('scenario-content').classList.add('hidden');
+            const results = document.getElementById('scenario-results');
+            results.classList.remove('hidden');
+
+            const updatedStats = saveScenarioStats(scenarioScore, scenarioWeakTopics);
+
+            document.getElementById('scenario-final-score').innerText = scenarioScore;
+            document.getElementById('scenario-total').innerText = activeScenarios.length;
+            document.getElementById('scenario-best-score').innerText = updatedStats.bestScore;
+
+            const icon = document.getElementById('scenario-results-icon');
+            if (scenarioScore === activeScenarios.length) {
+                icon.className = 'fa-solid fa-crown text-5xl text-yellow-500';
+            } else if (scenarioScore >= Math.ceil(activeScenarios.length * 0.7)) {
+                icon.className = 'fa-solid fa-road text-5xl text-indigo-500';
+            } else {
+                icon.className = 'fa-solid fa-book-open text-5xl text-gray-500';
+            }
+
+            const weakTopicsList = document.getElementById('weak-topics-list');
+            weakTopicsList.innerHTML = '';
+
+            const sortedSessionWeakTopics = Object.entries(scenarioWeakTopics)
+                .sort((a, b) => b[1] - a[1]);
+
+            if (sortedSessionWeakTopics.length === 0) {
+                weakTopicsList.innerHTML = '<p class="text-green-700 bg-green-50 border border-green-200 rounded-lg px-3 py-2">No weak topics this round. Great consistency.</p>';
+            } else {
+                sortedSessionWeakTopics.forEach(([topic, count]) => {
+                    const topicItem = document.createElement('div');
+                    topicItem.className = 'flex items-center justify-between border border-gray-200 rounded-lg px-3 py-2 bg-gray-50';
+                    topicItem.innerHTML = `<span class="font-medium capitalize">${topic.replace('-', ' ')}</span><span class="text-red-600 font-semibold">${count} miss${count > 1 ? 'es' : ''}</span>`;
+                    weakTopicsList.appendChild(topicItem);
+                });
+            }
+        }
+
+        // ==================== INITIALIZATION ====================
+        window.onload = () => {
+            // Render initial signs
+            renderFlashcards();
+            renderCatalogCoverage();
+        };
+
+    </script>
+</body>
+</html>
